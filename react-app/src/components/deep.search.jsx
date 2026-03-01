@@ -14,7 +14,7 @@ function DeepPDFSearch() {
     try {
       setLoadState(true);
       let response = await fetch(
-        "http://localhost:8000/api/resources/get/pdf/users",
+        "https://campushub-backend-57dg.onrender.com/api/resources/get/pdf/users",
         {
           method: "POST",
           credentials: "include",

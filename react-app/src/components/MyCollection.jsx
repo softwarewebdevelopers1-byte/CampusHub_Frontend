@@ -10,7 +10,7 @@ function MyCollection() {
     const fetchMyPdfs = async () => {
       try {
         let response = await fetch(
-          "http://localhost:8000/api/users/get/own/pdfs",
+          "https://campushub-backend-57dg.onrender.com/api/users/get/own/pdfs",
           {
             method: "GET",
             credentials: "include",
