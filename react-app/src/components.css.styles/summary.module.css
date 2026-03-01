@@ -1,0 +1,80 @@
+.card {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  max-width: 600px;
+  margin: 20px auto;
+  font-family: "Segoe UI", sans-serif;
+  animation: fadeIn 0.3s ease-in-out;
+}
+.header {
+  display: flex;
+  gap: 20px;
+  max-width: 600px;
+  position: fixed;
+  backdrop-filter: blur(20px);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.closeBtn {
+  background: transparent;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s ease;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+.copyBtn {
+  font-size: 16px;
+}
+.closeBtn:hover {
+  color: #e74c3c;
+}
+
+.content {
+  margin-top: 60px;
+  line-height: 1.5;
+  color: #444;
+}
+
+.noSummary {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #666;
+  margin: 20px 0 10px 0;
+}
+
+.noSummarySubtext {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #999;
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .header {
+    gap: 10px;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,127 @@
+.panel {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 320px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+/* Wrapper States */
+.wrapper.collapsed {
+  max-height: 150px;
+  overflow: hidden;
+}
+
+.wrapper.expanded {
+  min-height: 150px;
+  overflow-y: auto;
+}
+
+.header {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: #fafafa;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.header h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.list {
+  max-height: 340px;
+}
+
+.item {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background-color: #ffffff;
+  font-size: 13px;
+  color: #1f2937;
+}
+
+.item:hover {
+  background-color: #f9fafb;
+}
+
+.title {
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+}
+
+.text {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.time {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.footer {
+  position: relative;
+  z-index: 100;
+  padding: 14px;
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: #fafafa;
+}
+
+.button {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.button:hover {
+  opacity: 0.7;
+}
+
+/* Scrollbar width */
+.wrapper.expanded::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track (background) */
+.wrapper.expanded::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Scroll thumb */
+.wrapper.expanded::-webkit-scrollbar-thumb {
+  background: rgba(37, 99, 235, 0.4);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+/* Hover effect */
+.wrapper.expanded::-webkit-scrollbar-thumb:hover {
+  background: rgba(37, 99, 235, 0.7);
+}

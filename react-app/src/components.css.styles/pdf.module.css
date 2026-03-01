@@ -1,0 +1,243 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+:root {
+  --primary-color: #1e293b;
+  --secondary-color: #2563eb;
+}
+.pdfSection {
+  display: flex;
+  background-color: var(--primary-color);
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  padding: 30px;
+}
+.AllCategory {
+  display: flex;
+  margin-top: 20px;
+  gap: 20px;
+}
+.category {
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  background-color: #253a3d8a;
+}
+.category:hover {
+  background-color: var(--primary-color);
+}
+.headers {
+  color: var(--secondary-color);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1rem;
+}
+.search {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  gap: 15px;
+  width: 100%;
+  max-width: 900px;
+  justify-content: center;
+  align-items: center;
+}
+
+.search input {
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+  height: 45px;
+  padding: 0 15px;
+  outline: none;
+  border-radius: 8px;
+  border: 2px solid #374151;
+  background-color: #1f2937;
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search input:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+}
+
+.search input::placeholder {
+  color: #9ca3af;
+}
+
+.search button {
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  color: #fff;
+  background-color: var(--secondary-color);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  height: 45px;
+  min-width: 120px;
+}
+
+.search button:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.search button:active {
+  transform: translateY(0);
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 900px;
+  margin-top: 30px;
+  gap: 15px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #0f172a;
+}
+
+.results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.results::-webkit-scrollbar-track {
+  background-color: #1e293b;
+  border-radius: 10px;
+}
+
+.results::-webkit-scrollbar-thumb {
+  background-color: #2563eb;
+  border-radius: 10px;
+}
+
+.results::-webkit-scrollbar-thumb:hover {
+  background-color: #1d4ed8;
+}
+
+.noResults {
+  color: #9ca3af;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 16px;
+}
+
+.sortingContainer {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 900px;
+}
+
+.sortingContainer select {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 2px solid #374151;
+  background-color: #1f2937;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.sortingContainer select:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.sortingContainer select:hover {
+  border-color: var(--secondary-color);
+}
+/* pdf */
+.results {
+  margin-top: 20px;
+  display: grid;
+  gap: 15px;
+}
+
+.pdfBox {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  transition: 0.2s ease-in-out;
+}
+
+.pdfBox:hover {
+  transform: translateY(-3px);
+}
+
+.viewBtn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.viewBtn:hover {
+  background: #1e40af;
+}
+
+.noResults {
+  color: gray;
+  font-style: italic;
+}
+
+.previewOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.previewContainer {
+  width: 80%;
+  height: 85%;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.closeBtn {
+  align-self: flex-end;
+  background: red;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.iframePreview {
+  flex: 1;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+/*  */

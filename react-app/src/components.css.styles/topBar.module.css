@@ -1,0 +1,304 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+/* ===== Top Navigation ===== */
+.topNav {
+  background-color: #1e293b;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #334155;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 100;
+}
+.notificationPanel {
+  top: 0;
+  position: absolute;
+  right: -10px;
+  z-index: 100;
+}
+.notify_panel {
+  top: 0;
+  position: absolute;
+}
+/* Logo */
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #2563eb, #8b5cf6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.logoIcon {
+  color: #2563eb;
+  font-size: 1.5rem;
+}
+
+/* Search */
+.searchBar {
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 2rem;
+  position: relative;
+}
+
+.searchBar input {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 3rem;
+  border-radius: 2rem;
+  border: 1px solid #334155;
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #cbd5e1;
+}
+
+/* Actions */
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.notificationBtn {
+  position: relative;
+  cursor: pointer;
+}
+.userProfile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.userProfile:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5f9cff, #7f53ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.userName {
+  color: #f8fafc;
+  font-weight: 500;
+}
+
+.dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #1e1e2f;
+  border-radius: 12px;
+  padding: 10px;
+  width: 160px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.userProfile:hover .dropdown {
+  display: flex;
+}
+
+.profileBtn,
+.logoutBtn {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.profileBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.logoutBtn {
+  color: #ff4d4d;
+}
+
+.logoutBtn:hover {
+  background: rgba(255, 77, 77, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notificationBtn i,
+.userProfile i {
+  color: #f8fafc;
+}
+.notificationBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ef4444;
+  color: white;
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aiAssistantBtn {
+  background: linear-gradient(90deg, #2563eb, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.6rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.aiPulse {
+  animation: pulse 2s infinite;
+}
+.users button {
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: red;
+}
+.user {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  z-index: 100;
+  box-shadow: 4px 4px 10px rgba(37, 99, 235, 0);
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f8fafc;
+  color: #000;
+}
+.userProfile:hover .user {
+  display: flex;
+}
+/* delete account container */
+.accountDelCont {
+  display: flex;
+  backdrop-filter: blur(5px);
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent */
+  z-index: 1000;
+}
+.deleteAccount {
+  position: relative;
+  max-width: 400px;
+  height: 200px;
+  gap: 20px;
+  background-color: #f8fafc;
+  color: #000;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(37, 99, 235, 0);
+  display: flex;
+  flex-direction: column;
+}
+.deleteAccount button {
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+.deleteAccount button:first-child {
+  background-color: #ef4444;
+  color: white;
+}
+.DeleteCont {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.icon {
+  position: absolute;
+  font-weight: 1000;
+  top: 2px;
+  right: 10px;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .search-bar {
+    display: none;
+  }
+
+  .ai-assistant-btn span {
+    display: none;
+  }
+}

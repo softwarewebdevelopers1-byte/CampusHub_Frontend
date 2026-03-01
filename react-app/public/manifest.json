@@ -1,0 +1,25 @@
+{
+  "short_name": "CampusHub",
+  "name": "CampusHub",
+  "icons": [
+    {
+      "src": "512x512.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "192x192.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "campusHub.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#4CAF50",
+  "background_color": "#ffffff"
+}
