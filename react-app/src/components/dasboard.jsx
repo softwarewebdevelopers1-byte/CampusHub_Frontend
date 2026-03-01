@@ -25,7 +25,7 @@ export function Dashboard({ children }) {
     const checkLogin = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/auth/check/logged",
+          "https://campushub-backend-57dg.onrender.com/auth/check/logged",
           {
             method: "POST",
             headers: {
@@ -49,9 +49,9 @@ export function Dashboard({ children }) {
           localStorage.removeItem("username#campusHub0ZX");
         }
       } catch (err) {
-        Locate(false);
-        console.log(err);
-
+        // Locate(false);
+        locate("/error");
+        console.log("error===>", err);
         setRateLimitError(true); // show box instead of alert
       }
     };
