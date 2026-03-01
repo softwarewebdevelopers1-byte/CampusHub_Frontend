@@ -12,7 +12,7 @@ export function TopBar({ userName }) {
   let locate = useNavigate();
   useEffect(() => {
     let FunctionNotifications = async () => {
-      let notify = await fetch("http//:localhost:8000/api/public/notifications", {
+      let notify = await fetch("https://campushub-backend-57dg.onrender.com/api/public/notifications", {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

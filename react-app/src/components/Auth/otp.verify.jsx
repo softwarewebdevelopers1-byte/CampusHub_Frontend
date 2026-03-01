@@ -81,7 +81,7 @@ const OTPVerify = ({ email }) => {
   const onOtpSubmit = (data) => {
     if (isLoading) return;
     setIsLoading(true);
-    fetch("http://localhost:8000/auth/verify-otp", {
+    fetch("https://campushub-backend-57dg.onrender.com/auth/verify-otp", {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
