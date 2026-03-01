@@ -10,6 +10,7 @@ import { DeepPDFSearch } from "./components/deep.search.jsx";
 import { UploadResources } from "./components/upload.AI.jsx";
 import { UploadResourcesToThers } from "./components/upload.resource.others.jsx";
 import { MyCollection } from "./components/MyCollection.jsx";
+import NetworkError from "./components/network.error.jsx";
 
 function App() {
   return (
@@ -61,7 +62,6 @@ function App() {
           <Route path="/" element={<CampusHubLanding />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<ErrorPage />}></Route>
           <Route
             path="/homepage"
             element={
@@ -70,6 +70,9 @@ function App() {
               </Dashboard>
             }
           ></Route>
+          {/* error page */}
+          <Route path="/error" element={<NetworkError />} />
+          <Route path="*" element={<ErrorPage />}></Route>
         </Routes>
       </BrowserRouter>
     </>
