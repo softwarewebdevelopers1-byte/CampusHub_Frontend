@@ -15,7 +15,7 @@ function PDFLibrary() {
       setLoading(true);
 
       let response = await fetch(
-        "http://localhost:8000/api/resources/pdf/users/simple/search",
+        "https://campushub-backend-57dg.onrender.com/api/resources/pdf/users/simple/search",
         {
           method: "POST",
           credentials: "include",
