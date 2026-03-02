@@ -36,14 +36,6 @@ function App() {
             }
           />
           <Route
-            path="/AISummary"
-            element={
-              <Dashboard>
-                <UploadResources />
-              </Dashboard>
-            }
-          />
-          <Route
             path="/simpleSearch"
             element={
               <Dashboard>
@@ -51,6 +43,15 @@ function App() {
               </Dashboard>
             }
           />
+          <Route
+            path="/AISummary"
+            element={
+              <Dashboard>
+                <UploadResources />
+              </Dashboard>
+            }
+          />
+
           <Route
             path="/sharePDF"
             element={

@@ -160,6 +160,7 @@
 
 /* AI Floating Button */
 .ai-floating-btn {
+  z-index: 1000;
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -172,47 +173,14 @@
   font-size: 1.3rem;
   cursor: pointer;
 }
-
-/* AI Chat */
-.ai-chat-widget {
+.AI-cont{
   position: fixed;
-  bottom: 85px;
+  top: 90px;
   right: 20px;
-  width: 320px;
+  width: 300px;
+  max-height: 400px;
   background: #1e293b;
-  border-radius: 1rem;
+  border-radius: 0.8rem;
   border: 1px solid #334155;
-  overflow: hidden;
-}
-
-.ai-chat-header {
-  background: #2563eb;
-  padding: 0.8rem;
-  display: flex;
-  justify-content: space-between;
-}
-
-.ai-chat-body {
   padding: 1rem;
-}
-
-.ai-chat-input {
-  display: flex;
-  border-top: 1px solid #334155;
-}
-
-.ai-chat-input input {
-  flex: 1;
-  padding: 0.6rem;
-  border: none;
-  background: #0f172a;
-  color: white;
-}
-
-.ai-chat-input button {
-  background: #2563eb;
-  border: none;
-  padding: 0 1rem;
-  color: white;
-  cursor: pointer;
 }

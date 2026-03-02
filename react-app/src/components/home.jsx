@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { AINav } from "./AI.nav";
 import "../components.css.styles/home.css";
 
 export function WelcomePage() {
@@ -129,23 +130,9 @@ export function WelcomePage() {
       >
         <i className="fas fa-robot"></i>
       </button>
-
-      {/* AI Chat */}
-      {showChat && (
-        <div className="ai-chat-widget">
-          <div className="ai-chat-header">
-            <span>CampusHub AI</span>
-            <button onClick={() => setShowChat(false)}>×</button>
-          </div>
-
-          <div className="ai-chat-body">
-            <p>Hello {userName}! How can I help you today?</p>
-          </div>
-
-          <div className="ai-chat-input">
-            <input type="text" placeholder="Ask about your courses..." />
-            <button>Send</button>
-          </div>
+      {!showChat && (
+        <div className="AI-cont">
+          <AINav user={userName} />
         </div>
       )}
     </div>
