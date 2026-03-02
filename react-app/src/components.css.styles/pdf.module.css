@@ -1,243 +1,510 @@
+/* Updated CSS for pdf.module.css */
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
+
 :root {
   --primary-color: #1e293b;
   --secondary-color: #2563eb;
+  --accent-color: #3b82f6;
+  --background-dark: #0f172a;
+  --card-bg: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
 }
+
 .pdfSection {
   display: flex;
-  background-color: var(--primary-color);
+  background-color: var(--background-dark);
   flex-direction: column;
-  height: 100vh;
-  align-items: center;
+  min-height: 100vh;
   padding: 30px;
+  color: var(--text-primary);
 }
-.AllCategory {
-  display: flex;
-  margin-top: 20px;
-  gap: 20px;
-}
-.category {
-  padding: 10px;
-  border-radius: 5px;
-  color: #fff;
-  cursor: pointer;
-  background-color: #253a3d8a;
-}
-.category:hover {
-  background-color: var(--primary-color);
-}
+
 .headers {
   color: var(--secondary-color);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1rem 0 2rem 0;
+  text-align: center;
+  position: relative;
 }
-.search {
+
+.headers::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: var(--secondary-color);
+  border-radius: 2px;
+}
+
+/* Controls Bar */
+.controlsBar {
   display: flex;
   flex-wrap: wrap;
-  padding: 20px;
-  gap: 15px;
+  gap: 20px;
+  margin-bottom: 20px;
   width: 100%;
-  max-width: 900px;
-  justify-content: center;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.searchContainer {
+  flex: 2;
+  min-width: 280px;
+  position: relative;
+  display: flex;
   align-items: center;
 }
 
-.search input {
+.searchContainer i {
+  position: absolute;
+  left: 15px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.searchInput {
+  width: 100%;
+  height: 45px;
+  padding: 0 40px;
+  outline: none;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.searchInput::placeholder {
+  color: var(--text-secondary);
+}
+
+.clearSearch {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 5px;
+  font-size: 0.9rem;
+}
+
+.clearSearch:hover {
+  color: var(--text-primary);
+}
+
+.sortContainer {
   flex: 1;
-  min-width: 250px;
-  max-width: 400px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sortContainer label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.sortSelect {
+  flex: 1;
   height: 45px;
   padding: 0 15px;
-  outline: none;
-  border-radius: 8px;
-  border: 2px solid #374151;
-  background-color: #1f2937;
-  color: #fff;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
 }
 
-.search input:focus {
+.sortSelect:focus {
   border-color: var(--secondary-color);
-  box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+  outline: none;
 }
 
-.search input::placeholder {
-  color: #9ca3af;
+.sortSelect:hover {
+  border-color: var(--secondary-color);
 }
 
-.search button {
-  border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
-  color: #fff;
-  background-color: var(--secondary-color);
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  height: 45px;
-  min-width: 120px;
-}
-
-.search button:hover {
-  background-color: #1d4ed8;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-}
-
-.search button:active {
-  transform: translateY(0);
-}
-
-.results {
+/* Stats Bar */
+.statsBar {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  margin-bottom: 20px;
   width: 100%;
-  max-width: 900px;
-  margin-top: 30px;
-  gap: 15px;
-  max-height: 60vh;
-  overflow-y: auto;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #0f172a;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid var(--border-color);
 }
 
-.results::-webkit-scrollbar {
-  width: 8px;
-}
-
-.results::-webkit-scrollbar-track {
-  background-color: #1e293b;
-  border-radius: 10px;
-}
-
-.results::-webkit-scrollbar-thumb {
-  background-color: #2563eb;
-  border-radius: 10px;
-}
-
-.results::-webkit-scrollbar-thumb:hover {
-  background-color: #1d4ed8;
-}
-
-.noResults {
-  color: #9ca3af;
-  text-align: center;
-  padding: 40px 20px;
-  font-size: 16px;
-}
-
-.sortingContainer {
+.statsBar span {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: 900px;
+  gap: 8px;
 }
 
-.sortingContainer select {
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: 2px solid #374151;
-  background-color: #1f2937;
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
+.statsBar i {
+  color: var(--secondary-color);
 }
 
-.sortingContainer select:focus {
-  border-color: var(--secondary-color);
-  outline: none;
-}
-
-.sortingContainer select:hover {
-  border-color: var(--secondary-color);
-}
-/* pdf */
-.results {
-  margin-top: 20px;
+/* Results Grid */
+.resultsGrid {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+.pdfCard {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
   gap: 15px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.pdfBox {
-  background: #ffffff;
-  padding: 15px;
+.pdfCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--secondary-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pdfCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.3);
+  border-color: var(--secondary-color);
+}
+
+.pdfCard:hover::before {
+  opacity: 1;
+}
+
+.pdfIcon {
+  width: 50px;
+  height: 50px;
+  background: rgba(37, 99, 235, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pdfIcon i {
+  font-size: 1.8rem;
+  color: var(--secondary-color);
+}
+
+.pdfInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdfTitle {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdfCode {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.pdfCode strong {
+  color: var(--secondary-color);
+}
+
+.pdfMeta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.pdfMeta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pdfMeta i {
+  color: var(--secondary-color);
+}
+
+.pdfActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+
+.previewBtn,
+.downloadBtn {
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
-  transition: 0.2s ease-in-out;
-}
-
-.pdfBox:hover {
-  transform: translateY(-3px);
-}
-
-.viewBtn {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 6px 12px;
-  background: #2563eb;
-  color: white;
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--background-dark);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
   text-decoration: none;
-  font-size: 14px;
 }
 
-.viewBtn:hover {
-  background: #1e40af;
+.previewBtn:hover {
+  background: var(--secondary-color);
+  color: white;
+  border-color: var(--secondary-color);
+  transform: scale(1.05);
 }
 
+.downloadBtn:hover {
+  background: #10b981;
+  color: white;
+  border-color: #10b981;
+  transform: scale(1.05);
+}
+
+/* Loading State */
+.loadingContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-height: 400px;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--secondary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* No Results */
 .noResults {
-  color: gray;
-  font-style: italic;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
 }
 
+.noResults i {
+  font-size: 4rem;
+  color: var(--secondary-color);
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.noResults h3 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.noResults p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Preview Modal */
 .previewOverlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .previewContainer {
-  width: 80%;
-  height: 85%;
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
+  width: 90%;
+  height: 90%;
+  background: var(--card-bg);
+  border-radius: 20px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border-color);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.previewHeader {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.previewHeader h3 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.previewHeader h3 i {
+  color: var(--secondary-color);
 }
 
 .closeBtn {
-  align-self: flex-end;
-  background: red;
+  padding: 10px 20px;
+  background: var(--secondary-color);
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.closeBtn:hover {
+  background: #1d4ed8;
+  transform: scale(1.02);
 }
 
 .iframePreview {
   flex: 1;
   width: 100%;
   border: none;
-  border-radius: 8px;
-  margin-top: 10px;
+  background: white;
 }
-/*  */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pdfSection {
+    padding: 20px;
+  }
+
+  .headers {
+    font-size: 1.8rem;
+  }
+
+  .controlsBar {
+    flex-direction: column;
+  }
+
+  .resultsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pdfCard {
+    padding: 15px;
+  }
+
+  .previewContainer {
+    width: 95%;
+    height: 95%;
+  }
+
+  .previewHeader {
+    padding: 15px;
+  }
+
+  .previewHeader h3 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pdfMeta {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .pdfActions {
+    flex-direction: row;
+  }
+}
