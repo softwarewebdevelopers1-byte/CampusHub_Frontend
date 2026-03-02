@@ -208,7 +208,7 @@ function UploadResources() {
     formData.append("file", file);
 
     async function uploadRequest() {
-      return fetch("http://localhost:8000/api/resource/pdf", {
+      return fetch("https://campushub-backend-57dg.onrender.com/api/resource/pdf", {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -220,7 +220,7 @@ function UploadResources() {
 
       if (response.status === 401) {
         const refresh = await fetch(
-          "http://localhost:8000/auth/verify/refresh",
+          "https://campushub-backend-57dg.onrender.com/auth/verify/refresh",
           {
             method: "POST",
             credentials: "include",
