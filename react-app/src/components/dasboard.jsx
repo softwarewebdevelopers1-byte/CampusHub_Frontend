@@ -49,7 +49,7 @@ export function Dashboard({ children }) {
           localStorage.removeItem("username#campusHub0ZX");
         }
       } catch (err) {
-        // Locate(false);
+        Locate(false);
         locate("/error");
         console.log("error===>", err);
         setRateLimitError(true); // show box instead of alert
@@ -58,9 +58,9 @@ export function Dashboard({ children }) {
     checkLogin();
   }, []);
 
-  if (isLogged === null) {
-    return <Loader />;
-  }
+  // if (isLogged === null) {
+  //   return <Loader />;
+  // }
 
   return (
     <div>

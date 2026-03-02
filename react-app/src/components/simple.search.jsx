@@ -9,12 +9,13 @@ function PDFLibrary() {
 
   const handleSearch = async () => {
     if (!searchTerm) return;
+    setResults([]);
 
     try {
       setLoading(true);
 
       let response = await fetch(
-        "https://campushub-backend-57dg.onrender.com/api/resources/get/pdf/users",
+        "http://localhost:8000/api/resources/pdf/users/simple/search",
         {
           method: "POST",
           credentials: "include",
