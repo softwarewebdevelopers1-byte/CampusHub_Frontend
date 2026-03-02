@@ -5,26 +5,37 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../loaders/loader.jsx";
 export function TopBar({ userName }) {
   const [notification, setNotification] = useState(false);
-  const [count, resetCount] = useState(0);
+  const [count, resetCount] = useState(() => {
+    const storedCount = localStorage.getItem("notificationCount#campusHub0ZX");
+    return storedCount ? JSON.parse(storedCount) : 0;
+  });
   const [deleteAccountConfirm, setDeleteAccountConfirm] = useState(false);
   let [loading, resetLoading] = useState(false);
   const [getNotification, setNotifications] = useState("");
   let locate = useNavigate();
-  useEffect(() => {
-    let FunctionNotifications = async () => {
-      let notify = await fetch("https://campushub-backend-57dg.onrender.com/api/public/notifications", {
+ useEffect(() => {
+  const fetchNotifications = async () => {
+    let notify = await fetch(
+      "https://campushub-backend-57dg.onrender.com/api/public/notifications",
+      {
         method: "GET",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (notify.status === 200) {
-        let data = await notify.json();
-        resetCount(data.count);
-        setNotifications(data.data);
       }
-    };
-    FunctionNotifications();
-  }, [notification]);
+    );
+
+    if (notify.status === 200) {
+      let data = await notify.json();
+      resetCount(data.count); // IMPORTANT
+      setNotifications(data.data);
+    }
+  };
+
+  fetchNotifications();
+
+  const interval = setInterval(fetchNotifications, 10000); // 10 sec
+
+  return () => clearInterval(interval);
+}, []);
   async function DeleteAccount() {
     setDeleteAccountConfirm(false);
     resetLoading(true);
@@ -52,10 +63,13 @@ export function TopBar({ userName }) {
   async function LogOut() {
     resetLoading(true);
     try {
-      let res = await fetch("https://campushub-backend-57dg.onrender.com/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      let res = await fetch(
+        "https://campushub-backend-57dg.onrender.com/auth/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
       GetInfo(res);
     } catch (error) {
       console.log(`issue: ${error}`);
