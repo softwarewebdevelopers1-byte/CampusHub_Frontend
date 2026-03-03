@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "../components.css.styles/pdf.module.css";
+import styles from "../components.css.styles/deepsearch.module.css";
 
 function DeepPDFSearch() {
   const [unitName, setUnitName] = useState("");
