@@ -130,7 +130,7 @@ export function WelcomePage() {
       >
         <i className="fas fa-robot"></i>
       </button>
-      {!showChat && (
+      {showChat && (
         <div className="AI-cont">
           <AINav user={userName} />
         </div>
