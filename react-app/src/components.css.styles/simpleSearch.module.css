@@ -98,7 +98,6 @@
   max-width: 1400px;
   margin: 0 auto;
 }
-
 .pdfBox {
   background: white;
   border-radius: 15px;
@@ -109,6 +108,18 @@
   backdrop-filter: blur(5px);
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.pdfBox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
 }
 
 .pdfBox:hover {
@@ -122,19 +133,24 @@
   margin-bottom: 1rem;
   font-weight: 600;
   border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  word-break: break-word;
 }
 
 .pdfBox p {
   color: #4a5568;
   margin: 0.5rem 0;
   font-size: 0.95rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
 }
 
 .pdfBox p strong {
   color: #667eea;
   font-weight: 600;
+  min-width: 100px;
+  margin-right: 0.5rem;
 }
 
 /* View Button */
@@ -341,4 +357,23 @@
 
 .results::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.4);
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pdfBox {
+    background: #2d3748;
+  }
+
+  .pdfBox h3 {
+    color: #e2e8f0;
+    border-bottom-color: #4a5568;
+  }
+
+  .pdfBox p {
+    color: #cbd5e0;
+  }
+
+  .pdfBox p strong {
+    color: #9f7aea;
+  }
 }
