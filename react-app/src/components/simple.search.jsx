@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "../components.css.styles/simpleSearch.module.css";
 
 function PDFLibrary() {
@@ -63,6 +63,7 @@ function PDFLibrary() {
           placeholder="Search PDFs..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
