@@ -48,12 +48,14 @@ function DeepPDFSearch() {
           placeholder="Enter Unit Name..."
           value={unitName}
           onChange={(e) => setUnitName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
         <input
           type="text"
           placeholder="Enter Course Code (optional)..."
           value={courseCode}
           onChange={(e) => setCourseCode(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
