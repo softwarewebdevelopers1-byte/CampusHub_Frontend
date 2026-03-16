@@ -16,7 +16,7 @@ export function TopBar({ userName }) {
  useEffect(() => {
   const fetchNotifications = async () => {
     let notify = await fetch(
-      "https://campushub-backend-57dg.onrender.com/api/public/notifications",
+      "http://localhost:8000/api/public/notifications",
       {
         method: "GET",
         credentials: "include",
@@ -41,7 +41,7 @@ export function TopBar({ userName }) {
     resetLoading(true);
     try {
       let res = await fetch(
-        "https://campushub-backend-57dg.onrender.com/auth/delete/account",
+        "http://localhost:8000/auth/delete/account",
         {
           method: "POST",
           credentials: "include",
@@ -64,7 +64,7 @@ export function TopBar({ userName }) {
     resetLoading(true);
     try {
       let res = await fetch(
-        "https://campushub-backend-57dg.onrender.com/auth/logout",
+        "http://localhost:8000/auth/logout",
         {
           method: "POST",
           credentials: "include",
@@ -80,7 +80,7 @@ export function TopBar({ userName }) {
   let LogOutAll = async () => {
     try {
       let res = await fetch(
-        "https://campushub-backend-57dg.onrender.com/auth/all/logout",
+        "http://localhost:8000/auth/all/logout",
         {
           method: "POST",
           credentials: "include",
