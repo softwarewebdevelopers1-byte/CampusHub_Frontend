@@ -21,19 +21,24 @@ const CampusHubVideo = () => {
     setSearchPerformed(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/search-videos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "http://localhost:8000/api/get/lecturer/videos",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ searchTerm: searchQuery }),
         },
-        body: JSON.stringify({ searchTerm: searchQuery }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Search failed");
       }
 
       const data = await response.json();
+      console.log(data.videos);
+      
       setVideos(data.videos || []);
     } catch (err) {
       setError(err.message || "Failed to fetch videos");

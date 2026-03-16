@@ -131,7 +131,13 @@ export function SideBar({ collapsed, setCollapsed }) {
             </div>
           </li>
           <li>
-            <Link to="/videos">
+            <Link
+              to="/videos"
+              className={location.pathname === "/videos" ? styles.active : ""}
+              onClick={() => {
+                changeTitle("CampusHub | Videos");
+              }}
+            >
               <i className="fas fa-video"></i>
               <span>Lecture Videos</span>
             </Link>
