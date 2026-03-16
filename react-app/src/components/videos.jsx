@@ -7,6 +7,8 @@ const CampusHubVideo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchPerformed, setSearchPerformed] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -19,6 +21,7 @@ const CampusHubVideo = () => {
     setLoading(true);
     setError(null);
     setSearchPerformed(true);
+    setSelectedVideo(null); // Close any open video when new search is performed
 
     try {
       const response = await fetch(
@@ -38,7 +41,7 @@ const CampusHubVideo = () => {
 
       const data = await response.json();
       console.log(data.videos);
-      
+
       setVideos(data.videos || []);
     } catch (err) {
       setError(err.message || "Failed to fetch videos");
@@ -51,6 +54,35 @@ const CampusHubVideo = () => {
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
     if (error) setError(null);
+  };
+
+  const handleVideoClick = (video) => {
+    setSelectedVideo(video);
+    setIsPlaying(true);
+  };
+
+  const handleCloseVideo = () => {
+    setSelectedVideo(null);
+    setIsPlaying(false);
+  };
+
+  const handlePlayVideo = () => {
+    setIsPlaying(true);
+  };
+
+  const handlePauseVideo = () => {
+    setIsPlaying(false);
+  };
+
+  // Format date function
+  const formatDate = (dateString) => {
+    if (!dateString) return "Unknown date";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
   };
 
   return (
@@ -84,6 +116,63 @@ const CampusHubVideo = () => {
         {error && <div className={styles.errorMessage}>{error}</div>}
       </div>
 
+      {/* Video Player Modal */}
+      {selectedVideo && (
+        <div className={styles.videoModal} onClick={handleCloseVideo}>
+          <div
+            className={styles.videoModalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className={styles.closeButton} onClick={handleCloseVideo}>
+              ×
+            </button>
+            <div className={styles.videoPlayerContainer}>
+              <video
+                src={selectedVideo.videoUrl}
+                controls
+                autoPlay
+                onPlay={handlePlayVideo}
+                onPause={handlePauseVideo}
+                className={styles.videoPlayer}
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div className={styles.videoDetails}>
+              <h2 className={styles.videoDetailTitle}>
+                {selectedVideo.title || selectedVideo.unitName}
+              </h2>
+              <p className={styles.videoDetailDescription}>
+                {selectedVideo.description}
+              </p>
+              <div className={styles.videoDetailMeta}>
+                <span className={styles.detailUploader}>
+                  Uploaded by: {selectedVideo.uploader}
+                </span>
+                <span className={styles.detailViews}>
+                  {selectedVideo.views || 0} views
+                </span>
+                <span className={styles.detailDate}>
+                  {formatDate(selectedVideo.uploadDate)}
+                </span>
+              </div>
+              {selectedVideo.courseTitle && (
+                <div className={styles.videoCourseInfo}>
+                  <span className={styles.courseTag}>
+                    Course: {selectedVideo.courseTitle}
+                  </span>
+                  {selectedVideo.unitCode && (
+                    <span className={styles.unitTag}>
+                      Unit Code: {selectedVideo.unitCode}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={styles.resultsSection}>
         {loading && (
           <div className={styles.loadingContainer}>
@@ -102,33 +191,59 @@ const CampusHubVideo = () => {
         {!loading && videos.length > 0 && (
           <>
             <h2 className={styles.resultsTitle}>
-              Search Results for "{searchQuery}"
+              Search Results for "{searchQuery}" ({videos.length}{" "}
+              {videos.length === 1 ? "video" : "videos"})
             </h2>
             <div className={styles.videoGrid}>
               {videos.map((video) => (
-                <div key={video.id} className={styles.videoCard}>
+                <div
+                  key={video.id}
+                  className={styles.videoCard}
+                  onClick={() => handleVideoClick(video)}
+                >
                   <div className={styles.thumbnailContainer}>
-                    <img
-                      src={video.thumbnail || "/default-thumbnail.jpg"}
-                      alt={video.title}
-                      className={styles.thumbnail}
-                    />
+                    {video.thumbnail ? (
+                      <img
+                        src={video.thumbnail}
+                        alt={video.unitName}
+                        className={styles.thumbnail}
+                      />
+                    ) : (
+                      <div className={styles.thumbnailPlaceholder}>
+                        <span>▶</span>
+                      </div>
+                    )}
                     {video.duration && (
                       <span className={styles.duration}>{video.duration}</span>
                     )}
+                    <div className={styles.playOverlay}>
+                      <span className={styles.playIcon}>▶</span>
+                    </div>
                   </div>
                   <div className={styles.videoInfo}>
-                    <h3 className={styles.videoTitle}>{video.title}</h3>
+                    <h3 className={styles.videoTitle}>
+                      {video.title || video.unitName || "Untitled Video"}
+                    </h3>
                     <p className={styles.videoDescription}>
-                      {video.description}
+                      {video.description ||
+                        `${video.unitCode || ""} ${video.courseTitle || ""}`}
                     </p>
                     <div className={styles.videoMeta}>
-                      <span className={styles.uploader}>{video.uploader}</span>
-                      <span className={styles.views}>{video.views} views</span>
+                      <span className={styles.uploader}>
+                        {video.email || "Unknown"}
+                      </span>
+                      <span className={styles.views}>
+                        {video.views || 0} views
+                      </span>
                       <span className={styles.uploadDate}>
-                        {video.uploadDate}
+                        {formatDate(video.uploadDate)}
                       </span>
                     </div>
+                    {video.unitCode && (
+                      <span className={styles.unitCodeBadge}>
+                        {video.unitCode}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}
