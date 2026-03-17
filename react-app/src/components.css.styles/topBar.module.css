@@ -3,10 +3,11 @@
   margin: 0;
   box-sizing: border-box;
 }
+
 /* ===== Top Navigation ===== */
 .topNav {
   background-color: #1e293b;
-  padding: 1rem 2rem;
+  padding: 0.8rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,83 +18,155 @@
   right: 0;
   height: 60px;
   z-index: 100;
+  gap: 0.5rem;
 }
+
 .notificationPanel {
   top: 0;
   position: absolute;
   right: -10px;
   z-index: 100;
 }
+
 .notify_panel {
-  top: 0;
   position: absolute;
+  top: 60px;
+  right: 10px;
+  z-index: 1000;
+  max-width: 350px;
+  width: 90vw;
 }
+
 /* Logo */
 .logoSection {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.3rem;
+  flex-shrink: 0;
 }
 
 .logo {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
   background: linear-gradient(90deg, #2563eb, #8b5cf6);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
+  white-space: nowrap;
+}
+
+@media (min-width: 480px) {
+  .logo {
+    font-size: 1.8rem;
+  }
 }
 
 .logoIcon {
   color: #2563eb;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+}
+
+@media (min-width: 480px) {
+  .logoIcon {
+    font-size: 1.5rem;
+  }
 }
 
 /* Search */
 .searchBar {
   flex-grow: 1;
   max-width: 600px;
-  margin: 0 2rem;
+  margin: 0 0.5rem;
   position: relative;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .searchBar {
+    margin: 0 2rem;
+  }
 }
 
 .searchBar input {
   width: 100%;
-  padding: 0.8rem 1rem 0.8rem 3rem;
+  padding: 0.6rem 0.8rem 0.6rem 2.5rem;
   border-radius: 2rem;
   border: 1px solid #334155;
   background-color: #0f172a;
   color: #f8fafc;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+  .searchBar input {
+    padding: 0.8rem 1rem 0.8rem 3rem;
+    font-size: 1rem;
+  }
 }
 
 .searchIcon {
   position: absolute;
-  left: 1rem;
+  left: 0.8rem;
   top: 50%;
   transform: translateY(-50%);
   color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+  .searchIcon {
+    left: 1rem;
+    font-size: 1rem;
+  }
 }
 
 /* Actions */
 .navActions {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 0.8rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .navActions {
+    gap: 1.5rem;
+  }
 }
 
 .notificationBtn {
   position: relative;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
+
+.notificationBtn i {
+  font-size: 1.1rem;
+}
+
+@media (min-width: 768px) {
+  .notificationBtn i {
+    font-size: 1.25rem;
+  }
+}
+
 .userProfile {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 12px;
+  gap: 4px;
+  padding: 4px 6px;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .userProfile {
+    gap: 10px;
+    padding: 6px 12px;
+  }
 }
 
 .userProfile:hover {
@@ -101,8 +174,8 @@
 }
 
 .avatar {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, #5f9cff, #7f53ff);
   display: flex;
@@ -110,33 +183,70 @@
   justify-content: center;
   font-weight: bold;
   color: white;
-  font-size: 16px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
 }
 
 .userInfo {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 6px;
+}
+
+@media (min-width: 640px) {
+  .userInfo {
+    display: flex;
+  }
 }
 
 .userName {
   color: #f8fafc;
   font-weight: 500;
+  font-size: 0.9rem;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+@media (min-width: 1024px) {
+  .userName {
+    max-width: 150px;
+  }
+}
+
+/* Dropdown Menu */
 .dropdown {
   position: absolute;
-  top: 40px;
+  top: 45px;
   right: 0;
   background: #1e1e2f;
   border-radius: 12px;
-  padding: 10px;
-  width: 160px;
+  padding: 8px;
+  min-width: 180px;
+  width: max-content;
+  max-width: 220px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   display: none;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   animation: fadeIn 0.2s ease-in-out;
+  z-index: 1000;
+}
+
+@media (max-width: 480px) {
+  .dropdown {
+    right: -20px;
+    min-width: 160px;
+  }
 }
 
 .userProfile:hover .dropdown {
@@ -147,12 +257,22 @@
 .logoutBtn {
   background: transparent;
   border: none;
-  padding: 8px;
+  padding: 8px 10px;
   border-radius: 8px;
+  text-decoration: none;
   text-align: left;
   cursor: pointer;
   color: white;
   transition: background 0.2s ease;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .profileBtn,
+  .logoutBtn {
+    font-size: 0.9rem;
+  }
 }
 
 .profileBtn:hover {
@@ -182,59 +302,79 @@
 .userProfile i {
   color: #f8fafc;
 }
+
 .notificationBadge {
   position: absolute;
   top: -5px;
   right: -5px;
   background-color: #ef4444;
   color: white;
-  width: 18px;
-  height: 18px;
-  font-size: 0.7rem;
+  width: 16px;
+  height: 16px;
+  font-size: 0.6rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+@media (min-width: 768px) {
+  .notificationBadge {
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+  }
+}
+
+/* AI Assistant Button */
 .aiAssistantBtn {
   background: linear-gradient(90deg, #2563eb, #8b5cf6);
   color: white;
   border: none;
   border-radius: 2rem;
-  padding: 0.6rem 1.2rem;
+  padding: 0.5rem 0.8rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .aiAssistantBtn {
+    padding: 0.6rem 1.2rem;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+.aiAssistantBtn i {
+  font-size: 0.9rem;
+}
+
+@media (min-width: 640px) {
+  .aiAssistantBtn i {
+    font-size: 1rem;
+  }
+}
+
+.aiAssistantBtn span {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .aiAssistantBtn span {
+    display: inline;
+  }
 }
 
 .aiPulse {
   animation: pulse 2s infinite;
 }
-.users button {
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  color: red;
-}
-.user {
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  position: absolute;
-  z-index: 100;
-  box-shadow: 4px 4px 10px rgba(37, 99, 235, 0);
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #f8fafc;
-  color: #000;
-}
-.userProfile:hover .user {
-  display: flex;
-}
-/* delete account container */
+
+/* Delete Account Modal */
 .accountDelCont {
   display: flex;
   backdrop-filter: blur(5px);
@@ -243,43 +383,91 @@
   width: 100vw;
   height: 100vh;
   position: fixed;
-  background: rgba(0, 0, 0, 0.5); /* semi-transparent */
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
+  padding: 1rem;
 }
+
 .deleteAccount {
   position: relative;
+  width: 100%;
   max-width: 400px;
-  height: 200px;
+  min-height: 200px;
+  height: auto;
   gap: 20px;
   background-color: #f8fafc;
   color: #000;
-  padding: 20px;
+  padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 4px 4px 10px rgba(37, 99, 235, 0);
   display: flex;
   flex-direction: column;
 }
+
+@media (max-width: 480px) {
+  .deleteAccount {
+    padding: 1.2rem;
+    max-width: 350px;
+  }
+}
+
+.deleteAccount p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .deleteAccount p {
+    font-size: 1rem;
+  }
+}
+
 .deleteAccount button {
   border-radius: 5px;
   border: none;
-  padding: 10px;
+  padding: 10px 15px;
   cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
-.deleteAccount button:first-child {
+
+@media (min-width: 768px) {
+  .deleteAccount button {
+    font-size: 0.9rem;
+  }
+}
+
+.deleteAccount button:first-of-type {
   background-color: #ef4444;
   color: white;
 }
+
 .DeleteCont {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
+
+@media (max-width: 360px) {
+  .DeleteCont {
+    flex-direction: column;
+  }
+
+  .DeleteCont button {
+    width: 100%;
+  }
+}
+
 .icon {
   position: absolute;
   font-weight: 1000;
-  top: 2px;
-  right: 10px;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
+
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6);
@@ -292,13 +480,158 @@
   }
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-  .search-bar {
-    display: none;
+/* Responsive Breakpoints */
+
+/* Extra Small Devices (Phones, < 480px) */
+@media (max-width: 479px) {
+  .topNav {
+    padding: 0.5rem;
   }
 
-  .ai-assistant-btn span {
+  .searchBar {
+    max-width: 150px;
+  }
+
+  .searchBar input {
+    padding: 0.5rem 0.6rem 0.5rem 2rem;
+  }
+
+  .searchIcon {
+    left: 0.6rem;
+  }
+
+  .navActions {
+    gap: 0.5rem;
+  }
+
+  .aiAssistantBtn {
+    padding: 0.4rem 0.6rem;
+  }
+
+  .aiAssistantBtn i {
+    margin-right: 0;
+  }
+
+  .notificationBtn i {
+    font-size: 1rem;
+  }
+}
+
+/* Small Devices (Phones, 480px - 639px) */
+@media (min-width: 480px) and (max-width: 639px) {
+  .topNav {
+    padding: 0.5rem 0.8rem;
+  }
+
+  .searchBar {
+    max-width: 200px;
+  }
+
+  .navActions {
+    gap: 0.6rem;
+  }
+}
+
+/* Medium Devices (Tablets, 640px - 767px) */
+@media (min-width: 640px) and (max-width: 767px) {
+  .topNav {
+    padding: 0.5rem 1rem;
+  }
+
+  .searchBar {
+    max-width: 250px;
+    margin: 0 0.8rem;
+  }
+}
+
+/* Large Devices (Tablets/Laptops, 768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .topNav {
+    padding: 1rem 1.5rem;
+  }
+
+  .searchBar {
+    max-width: 350px;
+  }
+
+  .userName {
+    max-width: 60px;
+  }
+}
+
+/* Extra Large Devices (Desktops, 1024px - 1279px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .topNav {
+    padding: 1rem 2rem;
+  }
+
+  .searchBar {
+    max-width: 450px;
+  }
+}
+
+/* Ultra Large Devices (Large Desktops, 1280px+) */
+@media (min-width: 1280px) {
+  .topNav {
+    padding: 1rem 3rem;
+  }
+
+  .searchBar {
+    max-width: 600px;
+  }
+
+  .userName {
+    max-width: 150px;
+  }
+}
+
+/* Landscape Mode Optimization */
+@media (max-height: 480px) and (orientation: landscape) {
+  .topNav {
+    height: 50px;
+    padding: 0.3rem 1rem;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .dropdown {
+    top: 40px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .notify_panel {
+    top: 50px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
+
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .avatar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .topNav {
     display: none;
+  }
+}
+
+/* Fix for notch displays (iPhone 13+, etc) */
+@supports (padding: max(0px)) {
+  .topNav {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .notify_panel {
+    right: max(10px, env(safe-area-inset-right));
   }
 }

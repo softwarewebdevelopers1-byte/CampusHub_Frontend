@@ -1,0 +1,501 @@
+/* settings.module.css - Modern Version */
+
+/* Import Google Font (optional - add to your HTML) */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.settingsContainer {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.settingsContainer::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+  position: relative;
+}
+
+.title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd700, #ffa500);
+  margin: 0.8rem auto 0;
+  border-radius: 2px;
+}
+
+.form {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.form:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.form h3 {
+  font-size: 1.4rem;
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form h3::before {
+  content: "✨";
+  font-size: 1.2rem;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+  color: #4a5568;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.input {
+  margin-top: 0.4rem;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f8fafc;
+  color: #2d3748;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  background: white;
+}
+
+.input::placeholder {
+  color: #a0aec0;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1rem;
+  color: #2d3748;
+  margin: 1.2rem 0;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.checkboxLabel:hover {
+  background: #edf2f7;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #667eea;
+  border-radius: 6px;
+}
+
+.button {
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+
+.button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+/* Danger Zone Styles */
+.dangerZone {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(254, 226, 226, 0.3);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dangerZone:hover {
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 15px 40px rgba(239, 68, 68, 0.15);
+}
+
+.dangerZone h3 {
+  font-size: 1.3rem;
+  color: #ef4444;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dangerZone h3::before {
+  content: "⚠️";
+  font-size: 1.2rem;
+}
+
+.deleteButton {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.deleteButton::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+
+.deleteButton:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.deleteButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+}
+
+.confirmBox {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  animation: slideIn 0.3s ease;
+  border: 1px solid #fee2e2;
+}
+
+.confirmBox p {
+  color: #991b1b;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #fee2e2;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.confirmDelete {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  margin-right: 1rem;
+  padding: 0.8rem 1.8rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.confirmDelete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+}
+
+.cancelDelete {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+  padding: 0.8rem 1.8rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.cancelDelete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(75, 85, 99, 0.3);
+}
+
+/* Additional modern touches */
+.passwordStrength {
+  margin-top: 0.5rem;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.passwordStrengthBar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settingsContainer {
+    max-width: 90%;
+    margin: 1rem auto;
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .form {
+    padding: 1.5rem;
+  }
+
+  .form h3 {
+    font-size: 1.2rem;
+  }
+
+  .input {
+    padding: 0.7rem;
+    font-size: 0.95rem;
+  }
+
+  .button {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .confirmBox {
+    padding: 1rem;
+  }
+
+  .confirmDelete,
+  .cancelDelete {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .settingsContainer {
+    max-width: 95%;
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .title::after {
+    width: 60px;
+  }
+
+  .form {
+    padding: 1.2rem;
+  }
+
+  .checkboxLabel {
+    font-size: 0.9rem;
+  }
+
+  .confirmBox {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .confirmDelete,
+  .cancelDelete {
+    width: 100%;
+    margin: 0;
+  }
+
+  .dangerZone {
+    padding: 1rem;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .form {
+    background: #1e293b;
+  }
+
+  .form h3 {
+    color: #f1f5f9;
+  }
+
+  .label {
+    color: #cbd5e1;
+  }
+
+  .input {
+    background: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+  }
+
+  .input:focus {
+    background: #1e293b;
+  }
+
+  .checkboxLabel {
+    background: #334155;
+    color: #f1f5f9;
+  }
+
+  .checkboxLabel:hover {
+    background: #475569;
+  }
+
+  .dangerZone {
+    background: rgba(127, 29, 29, 0.3);
+  }
+
+  .confirmBox {
+    background: #1e293b;
+  }
+
+  .confirmBox p {
+    background: #7f1d1d;
+    color: #fecaca;
+  }
+}
+
+/* Optional: Add smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}

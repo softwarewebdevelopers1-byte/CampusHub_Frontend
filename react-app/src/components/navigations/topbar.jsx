@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "../../components.css.styles/topBar.module.css";
 import Notification from "../notifications/notification.jsx";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../loaders/loader.jsx";
 export function TopBar({ userName }) {
   const [notification, setNotification] = useState(false);
@@ -13,40 +13,37 @@ export function TopBar({ userName }) {
   let [loading, resetLoading] = useState(false);
   const [getNotification, setNotifications] = useState("");
   let locate = useNavigate();
- useEffect(() => {
-  const fetchNotifications = async () => {
-    let notify = await fetch(
-      "http://localhost:8000/api/public/notifications",
-      {
-        method: "GET",
-        credentials: "include",
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      let notify = await fetch(
+        "http://localhost:8000/api/public/notifications",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+
+      if (notify.status === 200) {
+        let data = await notify.json();
+        resetCount(data.count); // IMPORTANT
+        setNotifications(data.data);
       }
-    );
+    };
 
-    if (notify.status === 200) {
-      let data = await notify.json();
-      resetCount(data.count); // IMPORTANT
-      setNotifications(data.data);
-    }
-  };
+    fetchNotifications();
 
-  fetchNotifications();
+    const interval = setInterval(fetchNotifications, 10000); // 10 sec
 
-  const interval = setInterval(fetchNotifications, 10000); // 10 sec
-
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
   async function DeleteAccount() {
     setDeleteAccountConfirm(false);
     resetLoading(true);
     try {
-      let res = await fetch(
-        "http://localhost:8000/auth/delete/account",
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
+      let res = await fetch("http://localhost:8000/auth/delete/account", {
+        method: "POST",
+        credentials: "include",
+      });
       GetInfo(res);
     } catch (error) {
       console.log(`issue: ${error}`);
@@ -63,13 +60,10 @@ export function TopBar({ userName }) {
   async function LogOut() {
     resetLoading(true);
     try {
-      let res = await fetch(
-        "http://localhost:8000/auth/logout",
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
+      let res = await fetch("http://localhost:8000/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
       GetInfo(res);
     } catch (error) {
       console.log(`issue: ${error}`);
@@ -79,13 +73,10 @@ export function TopBar({ userName }) {
   }
   let LogOutAll = async () => {
     try {
-      let res = await fetch(
-        "http://localhost:8000/auth/all/logout",
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
+      let res = await fetch("http://localhost:8000/auth/all/logout", {
+        method: "POST",
+        credentials: "include",
+      });
       GetInfo(res);
     } catch (error) {
       console.log(`issue: ${error}`);
@@ -151,12 +142,20 @@ export function TopBar({ userName }) {
               <button className={styles.logoutBtn} onClick={LogOutAll}>
                 <i className="fas fa-sign-out-alt"></i> Logout All Devices
               </button>
-              <button
+              {/* <button
                 className={styles.logoutBtn}
                 onClick={() => setDeleteAccountConfirm(true)}
               >
                 <i className="fas fa-user-times"></i> Delete Account
-              </button>
+              </button> */}
+              <Link to="/settings" className={styles.logoutBtn}>
+                <i
+                  className={`fa fa-cog`}
+                  style={{paddingRight:"10px"}}
+                  aria-hidden="true"
+                ></i>
+                Settings
+              </Link>
             </div>
           </div>
           <button className={`${styles.aiAssistantBtn} ${styles.aiPulse}`}>

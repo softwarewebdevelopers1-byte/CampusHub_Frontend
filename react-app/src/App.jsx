@@ -12,6 +12,7 @@ import { UploadResourcesToThers } from "./components/upload.resource.others.jsx"
 import { MyCollection } from "./components/MyCollection.jsx";
 import NetworkError from "./components/network.error.jsx";
 import CampusHubVideo from "./components/videos.jsx";
+import Settings from "./components/settings.jsx";
 
 function App() {
   return (
@@ -66,6 +67,14 @@ function App() {
             element={
               <Dashboard>
                 <CampusHubVideo />
+              </Dashboard>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <Dashboard>
+                <Settings />
               </Dashboard>
             }
           />
