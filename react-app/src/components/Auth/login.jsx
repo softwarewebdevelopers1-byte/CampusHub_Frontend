@@ -19,6 +19,20 @@ const Login = () => {
   // Check if already logged in
   useEffect(() => {
     (async () => {
+      const adminResponse = await fetch(
+        "http://localhost:8000/auth/check/admin/logged",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+
+      if (adminResponse.ok) {
+        navigate("/admin");
+        document.title = "CampusHub Admin";
+        return;
+      }
+
       const response = await fetch("http://localhost:8000/auth/check/logged", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,6 +80,20 @@ const Login = () => {
           "username#campusHub0ZX",
           JSON.stringify(result.user),
         );
+        localStorage.setItem(
+          "user",
+          JSON.stringify(result.userName || result.user),
+        );
+        localStorage.setItem(
+          "role#campusHub0ZX",
+          JSON.stringify(result.role || "Student"),
+        );
+
+        if (result.role === "Admin") {
+          navigate("/admin");
+          document.title = "CampusHub Admin";
+          return;
+        }
 
         navigate("/homepage");
         document.title = "CampusHub";

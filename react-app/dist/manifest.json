@@ -3,12 +3,12 @@
   "name": "CampusHub",
   "icons": [
     {
-      "src": "campusHub.png",
+      "src": "512x512.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "campusHub.png",
+      "src": "192x192.png",
       "sizes": "512x512",
       "type": "image/png"
     },
