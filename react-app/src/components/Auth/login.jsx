@@ -25,7 +25,7 @@ const Login = () => {
   useEffect(() => {
     (async () => {
       const adminResponse = await fetch(
-        "http://localhost:8000/auth/check/admin/logged",
+        "https://campushub-backend-57dg.onrender.com/auth/check/admin/logged",
         {
           method: "GET",
           credentials: "include",
@@ -38,7 +38,7 @@ const Login = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:8000/auth/check/logged", {
+      const response = await fetch("https://campushub-backend-57dg.onrender.com/auth/check/logged", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user: "user" }),
@@ -59,7 +59,7 @@ const Login = () => {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:8000/auth/login", {
+      const res = await fetch("https://campushub-backend-57dg.onrender.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

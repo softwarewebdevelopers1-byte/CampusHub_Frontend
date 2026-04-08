@@ -16,7 +16,7 @@ export function TopBar({ userName }) {
   useEffect(() => {
     const fetchNotifications = async () => {
       let notify = await fetch(
-        "http://localhost:8000/api/public/notifications",
+        "https://campushub-backend-57dg.onrender.com/api/public/notifications",
         {
           method: "GET",
           credentials: "include",

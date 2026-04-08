@@ -42,7 +42,7 @@ const Signup = () => {
   useEffect(() => {
     (async () => {
       // checking if user is logged in
-      let Response = await fetch("http://localhost:8000/auth/check/logged", {
+      let Response = await fetch("https://campushub-backend-57dg.onrender.com/auth/check/logged", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user: "user" }),
@@ -112,7 +112,7 @@ const Signup = () => {
     if (buttonRef.current) {
       buttonRef.current.style.width = `${buttonRef.current.offsetWidth}px`;
     }
-    fetch("http://localhost:8000/auth/signUp", {
+    fetch("https://campushub-backend-57dg.onrender.com/auth/signUp", {
       method: "POST",
       credentials: "include",
       headers: {

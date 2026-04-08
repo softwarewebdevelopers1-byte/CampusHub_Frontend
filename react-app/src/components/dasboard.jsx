@@ -25,7 +25,7 @@ export function Dashboard({ children }) {
     const checkLogin = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/auth/check/logged",
+          "https://campushub-backend-57dg.onrender.com/auth/check/logged",
           {
             method: "POST",
             headers: {
