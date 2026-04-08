@@ -21,6 +21,7 @@ function MyCollection() {
           },
         );
 
+        let data = await response.json();
         
 
         if (response.status === 200) {
