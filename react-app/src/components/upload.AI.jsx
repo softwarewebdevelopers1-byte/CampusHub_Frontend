@@ -20,6 +20,7 @@ function UploadResources() {
   const [summaryState, resetSummaryState] = useState(false);
   // setting the Ai summary
   const [AISummary, resetAISummary] = useState("");
+  const [rawSummary, setRawSummary] = useState("");
   // setting the upload status
   const [uploadStatus, setUploadStatus] = useState("");
   // getting the input element
@@ -244,6 +245,7 @@ function UploadResources() {
       setUploadStatus("success");
       resetSummaryState(true);
       setClose(false);
+      setRawSummary(res.data2 || "");
 
       let AIWords = formatAllElements(res.data2);
       resetAISummary(AIWords);
@@ -274,6 +276,7 @@ function UploadResources() {
             closeBtn={close}
             closeSet={setClose}
             setSummary={resetSummaryState}
+            rawSummary={rawSummary}
             AI={<div dangerouslySetInnerHTML={{ __html: AISummary }} />}
           />
         </div>

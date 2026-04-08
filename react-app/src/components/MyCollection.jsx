@@ -14,7 +14,7 @@ function MyCollection() {
       try {
         setLoading(true);
         let response = await fetch(
-          "https://campushub-backend-57dg.onrender.com/api/users/get/own/pdfs",
+          "http://localhost:8000/api/users/get/own/pdfs",
           {
             method: "GET",
             credentials: "include",
@@ -22,6 +22,8 @@ function MyCollection() {
         );
 
         let data = await response.json();
+        console.log(data);
+        
 
         if (response.status === 200) {
           setMyPdfs(data);

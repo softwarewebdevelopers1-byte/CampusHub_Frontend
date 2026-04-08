@@ -17,14 +17,22 @@ const initialAnnouncementState = {
   content: "",
 };
 
+const sections = [
+  { id: "main", label: "Main Page" },
+  { id: "users", label: "Users Management" },
+  { id: "notifications", label: "Send Notifications" },
+];
+
 export default function AdminPanel() {
   const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState("main");
   const [users, setUsers] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [announcementLoading, setAnnouncementLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [postingAnnouncement, setPostingAnnouncement] = useState(false);
+  const [deletingUserKey, setDeletingUserKey] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
@@ -192,6 +200,43 @@ export default function AdminPanel() {
     }
   };
 
+  const handleDeleteUser = async (user) => {
+    const confirmed = window.confirm(
+      `Delete ${user.email} and related content? This cannot be undone.`,
+    );
+
+    if (!confirmed) return;
+
+    const rowKey = `${user.role}-${user.email}`;
+    setDeletingUserKey(rowKey);
+    setError("");
+    setMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/users`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: user.email,
+          role: user.role,
+        }),
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Unable to delete user");
+      }
+
+      setMessage(result.message || "User deleted");
+      await loadUsers();
+    } catch (deleteError) {
+      setError(deleteError.message || "Unable to delete user");
+    } finally {
+      setDeletingUserKey("");
+    }
+  };
+
   const handlePublishAnnouncement = async (event) => {
     event.preventDefault();
     if (postingAnnouncement) return;
@@ -275,339 +320,438 @@ export default function AdminPanel() {
   ).length;
   const latestUsers = [...users].slice(-5).reverse();
 
-  return (
-    <div className={styles.page}>
-      <div className={styles.shell}>
-        <header className={styles.hero}>
-          <div>
-            <p className={styles.eyebrow}>CampusHub Admin</p>
-            <h1>Operations Dashboard</h1>
-            <p className={styles.heroText}>
-              Manage accounts, activate or suspend access, and broadcast
-              announcements from one control center.
-            </p>
-          </div>
-          <button className={styles.logoutButton} onClick={handleLogout}>
-            Logout
-          </button>
-        </header>
+  const renderMainPage = () => (
+    <>
+      <header className={styles.hero}>
+        <div>
+          <p className={styles.eyebrow}>CampusHub Admin</p>
+          <h1>Admin Main Page</h1>
+          <p className={styles.heroText}>
+            Track account health, review recent activity, and keep the platform
+            organized from one admin workspace.
+          </p>
+        </div>
+      </header>
 
-        <section className={styles.statsGrid}>
-          <article className={styles.statCard}>
-            <span>Total Accounts</span>
-            <strong>{totalUsers}</strong>
-          </article>
-          <article className={styles.statCard}>
-            <span>Students</span>
-            <strong>{studentCount}</strong>
-          </article>
-          <article className={styles.statCard}>
-            <span>Lecturers</span>
-            <strong>{lecturerCount}</strong>
-          </article>
-          <article className={styles.statCard}>
-            <span>Admins</span>
-            <strong>{adminCount}</strong>
-          </article>
-          <article className={styles.statCard}>
-            <span>Active</span>
-            <strong>{activeAccounts}</strong>
-          </article>
-          <article className={styles.statCard}>
-            <span>Inactive</span>
-            <strong>{inactiveAccounts}</strong>
-          </article>
-        </section>
+      <section className={styles.statsGrid}>
+        <article className={styles.statCard}>
+          <span>Total Accounts</span>
+          <strong>{totalUsers}</strong>
+        </article>
+        <article className={styles.statCard}>
+          <span>Students</span>
+          <strong>{studentCount}</strong>
+        </article>
+        <article className={styles.statCard}>
+          <span>Lecturers</span>
+          <strong>{lecturerCount}</strong>
+        </article>
+        <article className={styles.statCard}>
+          <span>Admins</span>
+          <strong>{adminCount}</strong>
+        </article>
+        <article className={styles.statCard}>
+          <span>Active</span>
+          <strong>{activeAccounts}</strong>
+        </article>
+        <article className={styles.statCard}>
+          <span>Inactive</span>
+          <strong>{inactiveAccounts}</strong>
+        </article>
+      </section>
 
-        {message && <div className={styles.successBanner}>{message}</div>}
-        {error && <div className={styles.errorBanner}>{error}</div>}
-
-        <div className={styles.contentGrid}>
-          <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <p className={styles.panelEyebrow}>Create Account</p>
-                <h2>Add a new user</h2>
-              </div>
+      <div className={styles.secondaryGrid}>
+        <section className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <div>
+              <p className={styles.panelEyebrow}>Overview</p>
+              <h2>System snapshot</h2>
             </div>
-
-            <form className={styles.form} onSubmit={handleCreateUser}>
-              <label className={styles.field}>
-                <span>Role</span>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleFormChange}
-                >
-                  <option value="Student">Student</option>
-                  <option value="Lecturer">Lecturer</option>
-                  <option value="Admin">Admin</option>
-                </select>
-              </label>
-
-              {formData.role === "Student" && (
-                <label className={styles.field}>
-                  <span>Student name</span>
-                  <input
-                    name="userName"
-                    type="text"
-                    value={formData.userName}
-                    onChange={handleFormChange}
-                    placeholder="Enter student display name"
-                    required
-                  />
-                </label>
-              )}
-
-              {formData.role === "Lecturer" && (
-                <label className={styles.field}>
-                  <span>Lecturer full name</span>
-                  <input
-                    name="fullName"
-                    type="text"
-                    value={formData.fullName}
-                    onChange={handleFormChange}
-                    placeholder="Enter lecturer full name"
-                    required
-                  />
-                </label>
-              )}
-
-              <label className={styles.field}>
-                <span>Email</span>
-                <input
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleFormChange}
-                  placeholder="name@campushub.com"
-                  required
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>Temporary password</span>
-                <input
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleFormChange}
-                  placeholder="Create a secure temporary password"
-                  required
-                />
-              </label>
-
-              <button className={styles.primaryButton} type="submit">
-                {saving ? "Creating..." : "Create user"}
-              </button>
-            </form>
-          </section>
-
-          <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <p className={styles.panelEyebrow}>Users</p>
-                <h2>Manage accounts</h2>
-              </div>
-              <p className={styles.mutedText}>
-                Filter by role and search by name or email.
+          </div>
+          <div className={styles.summaryGrid}>
+            <div className={styles.summaryCard}>
+              <h3>User directory</h3>
+              <p>{totalUsers} total accounts currently indexed.</p>
+            </div>
+            <div className={styles.summaryCard}>
+              <h3>Announcements</h3>
+              <p>{announcements.length} admin notification records available.</p>
+            </div>
+            <div className={styles.summaryCard}>
+              <h3>Access state</h3>
+              <p>
+                {activeAccounts} active and {inactiveAccounts} inactive accounts.
               </p>
             </div>
-
-            <div className={styles.toolbar}>
-              <input
-                className={styles.searchInput}
-                type="search"
-                placeholder="Search users"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-              <select
-                className={styles.filterSelect}
-                value={roleFilter}
-                onChange={(event) => setRoleFilter(event.target.value)}
-              >
-                <option value="All">All roles</option>
-                <option value="Student">Students</option>
-                <option value="Lecturer">Lecturers</option>
-                <option value="Admin">Admins</option>
-              </select>
-            </div>
-
-            {loading ? (
-              <div className={styles.emptyState}>Loading users...</div>
-            ) : filteredUsers.length === 0 ? (
-              <div className={styles.emptyState}>No users match this filter.</div>
-            ) : (
-              <div className={styles.tableWrap}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Status</th>
-                      <th>Account</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredUsers.map((user) => (
-                      <tr key={`${user.role}-${user.email}`}>
-                        <td>{user.displayName}</td>
-                        <td>{user.email}</td>
-                        <td>{user.role}</td>
-                        <td>{user.status}</td>
-                        <td>
-                          <span
-                            className={
-                              user.account_state === "Active"
-                                ? styles.activeBadge
-                                : styles.inactiveBadge
-                            }
-                          >
-                            {user.account_state}
-                          </span>
-                        </td>
-                        <td>
-                          {user.role === "Admin" ? (
-                            <span className={styles.lockedAction}>Protected</span>
-                          ) : (
-                            <button
-                              className={styles.rowAction}
-                              onClick={() => handleAccountState(user)}
-                            >
-                              {user.account_state === "Active"
-                                ? "Deactivate"
-                                : "Activate"}
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
-        </div>
-
-        <div className={styles.secondaryGrid}>
-          <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <p className={styles.panelEyebrow}>Broadcast</p>
-                <h2>Send announcement</h2>
-              </div>
-            </div>
-
-            <form className={styles.form} onSubmit={handlePublishAnnouncement}>
-              <label className={styles.field}>
-                <span>Announcement title</span>
-                <input
-                  name="title"
-                  type="text"
-                  value={announcementForm.title}
-                  onChange={handleAnnouncementFormChange}
-                  placeholder="Important update title"
-                  required
-                />
-              </label>
-
-              <label className={styles.field}>
-                <span>Message</span>
-                <textarea
-                  className={styles.textArea}
-                  name="content"
-                  value={announcementForm.content}
-                  onChange={handleAnnouncementFormChange}
-                  placeholder="Write the announcement details here"
-                  required
-                />
-              </label>
-
-              <button className={styles.primaryButton} type="submit">
-                {postingAnnouncement ? "Publishing..." : "Publish"}
-              </button>
-            </form>
-          </section>
-
-          <section className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <div>
-                <p className={styles.panelEyebrow}>Recent Accounts</p>
-                <h2>Latest activity</h2>
-              </div>
-            </div>
-
-            <div className={styles.activityList}>
-              {latestUsers.length === 0 ? (
-                <div className={styles.emptyState}>No recent accounts.</div>
-              ) : (
-                latestUsers.map((user) => (
-                  <article
-                    key={`activity-${user.role}-${user.email}`}
-                    className={styles.activityItem}
-                  >
-                    <div>
-                      <h3>{user.displayName}</h3>
-                      <p>{user.email}</p>
-                    </div>
-                    <div className={styles.activityMeta}>
-                      <span>{user.role}</span>
-                      <span>{user.account_state}</span>
-                    </div>
-                  </article>
-                ))
-              )}
-            </div>
-          </section>
-        </div>
+          </div>
+        </section>
 
         <section className={styles.panel}>
           <div className={styles.panelHeader}>
             <div>
-              <p className={styles.panelEyebrow}>Published</p>
-              <h2>Your announcements</h2>
+              <p className={styles.panelEyebrow}>Recent Accounts</p>
+              <h2>Latest activity</h2>
             </div>
-            <p className={styles.mutedText}>
-              Review and remove notifications sent from this admin account.
-            </p>
           </div>
 
-          {announcementLoading ? (
-            <div className={styles.emptyState}>Loading announcements...</div>
-          ) : announcements.length === 0 ? (
-            <div className={styles.emptyState}>No announcements yet.</div>
-          ) : (
-            <div className={styles.announcementList}>
-              {announcements.map((announcement) => (
+          <div className={styles.activityList}>
+            {latestUsers.length === 0 ? (
+              <div className={styles.emptyState}>No recent accounts.</div>
+            ) : (
+              latestUsers.map((user) => (
                 <article
-                  key={`${announcement.title}-${announcement.time}-${announcement.content}`}
-                  className={styles.announcementCard}
+                  key={`activity-${user.role}-${user.email}`}
+                  className={styles.activityItem}
                 >
-                  <div className={styles.announcementTop}>
-                    <div>
-                      <h3>{announcement.title}</h3>
-                      <p>{announcement.time}</p>
-                    </div>
-                    <button
-                      className={styles.secondaryButton}
-                      onClick={() =>
-                        handleDeleteAnnouncement(announcement.content)
-                      }
-                    >
-                      Delete
-                    </button>
+                  <div>
+                    <h3>{user.displayName}</h3>
+                    <p>{user.email}</p>
                   </div>
-                  <p className={styles.announcementContent}>
-                    {announcement.content}
-                  </p>
+                  <div className={styles.activityMeta}>
+                    <span>{user.role}</span>
+                    <span>{user.account_state}</span>
+                  </div>
                 </article>
-              ))}
-            </div>
-          )}
+              ))
+            )}
+          </div>
         </section>
+      </div>
+    </>
+  );
+
+  const renderUsersPage = () => (
+    <div className={styles.contentGrid}>
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <p className={styles.panelEyebrow}>Create Account</p>
+            <h2>Add a new user</h2>
+          </div>
+        </div>
+
+        <form className={styles.form} onSubmit={handleCreateUser}>
+          <label className={styles.field}>
+            <span>Role</span>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleFormChange}
+            >
+              <option value="Student">Student</option>
+              <option value="Lecturer">Lecturer</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </label>
+
+          {formData.role === "Student" && (
+            <label className={styles.field}>
+              <span>Student name</span>
+              <input
+                name="userName"
+                type="text"
+                value={formData.userName}
+                onChange={handleFormChange}
+                placeholder="Enter student display name"
+                required
+              />
+            </label>
+          )}
+
+          {formData.role === "Lecturer" && (
+            <label className={styles.field}>
+              <span>Lecturer full name</span>
+              <input
+                name="fullName"
+                type="text"
+                value={formData.fullName}
+                onChange={handleFormChange}
+                placeholder="Enter lecturer full name"
+                required
+              />
+            </label>
+          )}
+
+          <label className={styles.field}>
+            <span>Email</span>
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleFormChange}
+              placeholder="name@campushub.com"
+              required
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Temporary password</span>
+            <input
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleFormChange}
+              placeholder="Create a secure temporary password"
+              required
+            />
+          </label>
+
+          <button className={styles.primaryButton} type="submit">
+            {saving ? "Creating..." : "Create user"}
+          </button>
+        </form>
+      </section>
+
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <p className={styles.panelEyebrow}>Users</p>
+            <h2>Users management</h2>
+          </div>
+          <p className={styles.mutedText}>
+            Toggle access or delete a user together with related content.
+          </p>
+        </div>
+
+        <div className={styles.toolbar}>
+          <input
+            className={styles.searchInput}
+            type="search"
+            placeholder="Search users"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+          <select
+            className={styles.filterSelect}
+            value={roleFilter}
+            onChange={(event) => setRoleFilter(event.target.value)}
+          >
+            <option value="All">All roles</option>
+            <option value="Student">Students</option>
+            <option value="Lecturer">Lecturers</option>
+            <option value="Admin">Admins</option>
+          </select>
+        </div>
+
+        {loading ? (
+          <div className={styles.emptyState}>Loading users...</div>
+        ) : filteredUsers.length === 0 ? (
+          <div className={styles.emptyState}>No users match this filter.</div>
+        ) : (
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Account</th>
+                  <th>Access</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user) => {
+                  const rowKey = `${user.role}-${user.email}`;
+                  return (
+                    <tr key={rowKey}>
+                      <td>{user.displayName}</td>
+                      <td>{user.email}</td>
+                      <td>{user.role}</td>
+                      <td>{user.status}</td>
+                      <td>
+                        <span
+                          className={
+                            user.account_state === "Active"
+                              ? styles.activeBadge
+                              : styles.inactiveBadge
+                          }
+                        >
+                          {user.account_state}
+                        </span>
+                      </td>
+                      <td>
+                        {user.role === "Admin" ? (
+                          <span className={styles.lockedAction}>Protected</span>
+                        ) : (
+                          <button
+                            className={styles.rowAction}
+                            onClick={() => handleAccountState(user)}
+                          >
+                            {user.account_state === "Active"
+                              ? "Deactivate"
+                              : "Activate"}
+                          </button>
+                        )}
+                      </td>
+                      <td>
+                        <button
+                          className={styles.deleteAction}
+                          onClick={() => handleDeleteUser(user)}
+                          disabled={deletingUserKey === rowKey}
+                        >
+                          {deletingUserKey === rowKey ? "Deleting..." : "Delete"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    </div>
+  );
+
+  const renderNotificationsPage = () => (
+    <>
+      <div className={styles.secondaryGrid}>
+        <section className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <div>
+              <p className={styles.panelEyebrow}>Broadcast</p>
+              <h2>Send notification</h2>
+            </div>
+          </div>
+
+          <form className={styles.form} onSubmit={handlePublishAnnouncement}>
+            <label className={styles.field}>
+              <span>Notification title</span>
+              <input
+                name="title"
+                type="text"
+                value={announcementForm.title}
+                onChange={handleAnnouncementFormChange}
+                placeholder="Important update title"
+                required
+              />
+            </label>
+
+            <label className={styles.field}>
+              <span>Message</span>
+              <textarea
+                className={styles.textArea}
+                name="content"
+                value={announcementForm.content}
+                onChange={handleAnnouncementFormChange}
+                placeholder="Write the notification details here"
+                required
+              />
+            </label>
+
+            <button className={styles.primaryButton} type="submit">
+              {postingAnnouncement ? "Publishing..." : "Send notification"}
+            </button>
+          </form>
+        </section>
+
+        <section className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <div>
+              <p className={styles.panelEyebrow}>Queue</p>
+              <h2>Notification records</h2>
+            </div>
+          </div>
+          <div className={styles.summaryGrid}>
+            <div className={styles.summaryCard}>
+              <h3>Total notifications</h3>
+              <p>{announcements.length} items authored by this admin.</p>
+            </div>
+            <div className={styles.summaryCard}>
+              <h3>Delivery style</h3>
+              <p>Notifications are published immediately to CampusHub users.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <p className={styles.panelEyebrow}>Published</p>
+            <h2>Your notifications</h2>
+          </div>
+          <p className={styles.mutedText}>
+            Review and remove notifications sent from this admin account.
+          </p>
+        </div>
+
+        {announcementLoading ? (
+          <div className={styles.emptyState}>Loading notifications...</div>
+        ) : announcements.length === 0 ? (
+          <div className={styles.emptyState}>No notifications yet.</div>
+        ) : (
+          <div className={styles.announcementList}>
+            {announcements.map((announcement) => (
+              <article
+                key={`${announcement.title}-${announcement.time}-${announcement.content}`}
+                className={styles.announcementCard}
+              >
+                <div className={styles.announcementTop}>
+                  <div>
+                    <h3>{announcement.title}</h3>
+                    <p>{announcement.time}</p>
+                  </div>
+                  <button
+                    className={styles.secondaryButton}
+                    onClick={() => handleDeleteAnnouncement(announcement.content)}
+                  >
+                    Delete
+                  </button>
+                </div>
+                <p className={styles.announcementContent}>
+                  {announcement.content}
+                </p>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+    </>
+  );
+
+  const renderSection = () => {
+    if (activeSection === "users") return renderUsersPage();
+    if (activeSection === "notifications") return renderNotificationsPage();
+    return renderMainPage();
+  };
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.layout}>
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarBrand}>
+            <p className={styles.sidebarEyebrow}>CampusHub</p>
+            <h2>Admin Desk</h2>
+          </div>
+
+          <nav className={styles.sidebarNav}>
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                className={`${styles.sidebarLink} ${activeSection === section.id ? styles.sidebarLinkActive : ""}`}
+                onClick={() => setActiveSection(section.id)}
+              >
+                {section.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className={styles.sidebarFooter}>
+            <p>Manage users, content, and announcements.</p>
+            <button className={styles.logoutButton} onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </aside>
+
+        <main className={styles.mainContent}>
+          {message && <div className={styles.successBanner}>{message}</div>}
+          {error && <div className={styles.errorBanner}>{error}</div>}
+          {renderSection()}
+        </main>
       </div>
     </div>
   );

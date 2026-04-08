@@ -16,6 +16,11 @@ const Login = () => {
     reset,
   } = useForm();
 
+  function getDashboardRoute(role) {
+    if (role === "Admin") return "/admin";
+    return "/homepage";
+  }
+
   // Check if already logged in
   useEffect(() => {
     (async () => {
@@ -88,15 +93,10 @@ const Login = () => {
           "role#campusHub0ZX",
           JSON.stringify(result.role || "Student"),
         );
-
-        if (result.role === "Admin") {
-          navigate("/admin");
-          document.title = "CampusHub Admin";
-          return;
-        }
-
-        navigate("/homepage");
-        document.title = "CampusHub";
+        const nextRoute = getDashboardRoute(result.role);
+        navigate(nextRoute);
+        document.title =
+          result.role === "Admin" ? "CampusHub Admin" : "CampusHub";
       } else {
         setMessage(result.message || "Login failed");
         setTimeout(() => {
