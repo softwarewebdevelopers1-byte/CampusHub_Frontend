@@ -2,7 +2,7 @@ import { useDeferredValue, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../components.css.styles/admin.module.css";
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "https://campushub-backend-57dg.onrender.com";
 
 const initialFormState = {
   role: "Student",

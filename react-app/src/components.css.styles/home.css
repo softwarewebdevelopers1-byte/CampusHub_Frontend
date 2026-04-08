@@ -184,3 +184,99 @@
   border: 1px solid #334155;
   padding: 1rem;
 }
+
+.latest-section {
+  margin-top: 2rem;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.latest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.latest-header h2 {
+  margin: 0;
+}
+
+.latest-header p {
+  margin: 0.35rem 0 0;
+  color: #94a3b8;
+}
+
+.latest-empty {
+  padding: 1rem;
+  border-radius: 0.8rem;
+  background: #0f172a;
+  color: #94a3b8;
+}
+
+.latest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.latest-card {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.latest-card h3 {
+  margin: 0.8rem 0 0;
+}
+
+.latest-card p {
+  margin: 0.5rem 0 0;
+  color: #94a3b8;
+}
+
+.latest-type {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.latest-pdf {
+  background: rgba(37, 99, 235, 0.18);
+  color: #93c5fd;
+}
+
+.latest-video {
+  background: rgba(16, 185, 129, 0.18);
+  color: #6ee7b7;
+}
+
+.latest-meta {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+}
+
+.latest-action {
+  margin-top: 1rem;
+  border: none;
+  border-radius: 0.7rem;
+  background: #2563eb;
+  color: white;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.latest-action:hover {
+  opacity: 0.92;
+}

@@ -40,7 +40,7 @@ export function TopBar({ userName }) {
     setDeleteAccountConfirm(false);
     resetLoading(true);
     try {
-      let res = await fetch("http://localhost:8000/auth/delete/account", {
+      let res = await fetch("https://campushub-backend-57dg.onrender.com/auth/delete/account", {
         method: "POST",
         credentials: "include",
       });
@@ -60,7 +60,7 @@ export function TopBar({ userName }) {
   async function LogOut() {
     resetLoading(true);
     try {
-      let res = await fetch("http://localhost:8000/auth/logout", {
+      let res = await fetch("https://campushub-backend-57dg.onrender.com/auth/logout", {
         method: "POST",
         credentials: "include",
       });
@@ -73,7 +73,7 @@ export function TopBar({ userName }) {
   }
   let LogOutAll = async () => {
     try {
-      let res = await fetch("http://localhost:8000/auth/all/logout", {
+      let res = await fetch("https://campushub-backend-57dg.onrender.com/auth/all/logout", {
         method: "POST",
         credentials: "include",
       });

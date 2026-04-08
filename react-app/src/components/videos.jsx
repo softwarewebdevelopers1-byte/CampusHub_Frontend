@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../components.css.styles/CampusHub_videos.module.css";
+
+const API_BASE = "https://campushub-backend-57dg.onrender.com";
 
 const CampusHubVideo = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -10,6 +12,39 @@ const CampusHubVideo = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const fetchVideos = async (term = "") => {
+    setLoading(true);
+    setError(null);
+    setSearchPerformed(Boolean(term.trim()));
+    setSelectedVideo(null);
+
+    try {
+      const response = await fetch(`${API_BASE}/api/get/lecturer/videos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ searchTerm: term }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to load videos");
+      }
+
+      const data = await response.json();
+      setVideos(data.videos || []);
+    } catch (err) {
+      setError(err.message || "Failed to fetch videos");
+      setVideos([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideos();
+  }, []);
+
   const handleSearch = async (e) => {
     e.preventDefault();
 
@@ -18,37 +53,7 @@ const CampusHubVideo = () => {
       return;
     }
 
-    setLoading(true);
-    setError(null);
-    setSearchPerformed(true);
-    setSelectedVideo(null); // Close any open video when new search is performed
-
-    try {
-      const response = await fetch(
-        "http://localhost:8000/api/get/lecturer/videos",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ searchTerm: searchQuery }),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Search failed");
-      }
-
-      const data = await response.json();
-      console.log(data.videos);
-
-      setVideos(data.videos || []);
-    } catch (err) {
-      setError(err.message || "Failed to fetch videos");
-      setVideos([]);
-    } finally {
-      setLoading(false);
-    }
+    await fetchVideos(searchQuery);
   };
 
   const handleInputChange = (e) => {
@@ -74,7 +79,6 @@ const CampusHubVideo = () => {
     setIsPlaying(false);
   };
 
-  // Format date function
   const formatDate = (dateString) => {
     if (!dateString) return "Unknown date";
     const date = new Date(dateString);
@@ -116,7 +120,6 @@ const CampusHubVideo = () => {
         {error && <div className={styles.errorMessage}>{error}</div>}
       </div>
 
-      {/* Video Player Modal */}
       {selectedVideo && (
         <div className={styles.videoModal} onClick={handleCloseVideo}>
           <div
@@ -124,7 +127,7 @@ const CampusHubVideo = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <button className={styles.closeButton} onClick={handleCloseVideo}>
-              ×
+              x
             </button>
             <div className={styles.videoPlayerContainer}>
               <video
@@ -147,7 +150,7 @@ const CampusHubVideo = () => {
               </p>
               <div className={styles.videoDetailMeta}>
                 <span className={styles.detailUploader}>
-                  Uploaded by: {selectedVideo.uploader}
+                  Uploaded by: {selectedVideo.email || "Unknown"}
                 </span>
                 <span className={styles.detailViews}>
                   {selectedVideo.views || 0} views
@@ -184,20 +187,22 @@ const CampusHubVideo = () => {
         {!loading && searchPerformed && videos.length === 0 && !error && (
           <div className={styles.noResults}>
             <p>No videos found for "{searchQuery}"</p>
-            <p>Try different keywords or browse all videos</p>
+            <p>Try different keywords or browse the latest lecturer uploads.</p>
           </div>
         )}
 
         {!loading && videos.length > 0 && (
           <>
             <h2 className={styles.resultsTitle}>
-              Search Results for "{searchQuery}" ({videos.length}{" "}
-              {videos.length === 1 ? "video" : "videos"})
+              {searchPerformed
+                ? `Search Results for "${searchQuery}"`
+                : "Latest Lecturer Videos"}{" "}
+              ({videos.length} {videos.length === 1 ? "video" : "videos"})
             </h2>
             <div className={styles.videoGrid}>
-              {videos.map((video) => (
+              {videos.map((video, index) => (
                 <div
-                  key={video.id}
+                  key={video._id || `${video.videoUrl}-${index}`}
                   className={styles.videoCard}
                   onClick={() => handleVideoClick(video)}
                 >
@@ -210,14 +215,14 @@ const CampusHubVideo = () => {
                       />
                     ) : (
                       <div className={styles.thumbnailPlaceholder}>
-                        <span>▶</span>
+                        <span>{">"}</span>
                       </div>
                     )}
                     {video.duration && (
                       <span className={styles.duration}>{video.duration}</span>
                     )}
                     <div className={styles.playOverlay}>
-                      <span className={styles.playIcon}>▶</span>
+                      <span className={styles.playIcon}>{">"}</span>
                     </div>
                   </div>
                   <div className={styles.videoInfo}>

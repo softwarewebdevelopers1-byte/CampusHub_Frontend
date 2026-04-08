@@ -14,6 +14,7 @@ import NetworkError from "./components/network.error.jsx";
 import CampusHubVideo from "./components/videos.jsx";
 import Settings from "./components/settings.jsx";
 import AdminPanel from "./components/admin.panel.jsx";
+import LecturerPanel from "./components/lecturer.panel.jsx";
 
 function App() {
   return (
@@ -83,6 +84,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/lecturer" element={<LecturerPanel />} />
           <Route
             path="/homepage"
             element={

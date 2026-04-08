@@ -18,6 +18,7 @@ const Login = () => {
 
   function getDashboardRoute(role) {
     if (role === "Admin") return "/admin";
+    if (role === "Lecturer") return "/lecturer";
     return "/homepage";
   }
 
@@ -35,6 +36,20 @@ const Login = () => {
       if (adminResponse.ok) {
         navigate("/admin");
         document.title = "CampusHub Admin";
+        return;
+      }
+
+      const lecturerResponse = await fetch(
+        "https://campushub-backend-57dg.onrender.com/auth/lecturer/check/logged",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+
+      if (lecturerResponse.ok) {
+        navigate("/lecturer");
+        document.title = "CampusHub Lecturer";
         return;
       }
 
@@ -96,7 +111,11 @@ const Login = () => {
         const nextRoute = getDashboardRoute(result.role);
         navigate(nextRoute);
         document.title =
-          result.role === "Admin" ? "CampusHub Admin" : "CampusHub";
+          result.role === "Admin"
+            ? "CampusHub Admin"
+            : result.role === "Lecturer"
+              ? "CampusHub Lecturer"
+              : "CampusHub";
       } else {
         setMessage(result.message || "Login failed");
         setTimeout(() => {

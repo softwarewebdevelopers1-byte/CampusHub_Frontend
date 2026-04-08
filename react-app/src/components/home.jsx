@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { AINav } from "./AI.nav";
 import "../components.css.styles/home.css";
 
+const API_BASE = "https://campushub-backend-57dg.onrender.com";
+
 export function WelcomePage() {
   const navigate = useNavigate();
 
@@ -10,6 +12,7 @@ export function WelcomePage() {
   const [userName, setUserName] = useState("Student");
   const [timeOfDay, setTimeOfDay] = useState("");
   const [notificationCount, setNotificationCount] = useState(0);
+  const [latestUploads, setLatestUploads] = useState([]);
 
   useEffect(() => {
     const updateGreeting = () => {
@@ -82,6 +85,25 @@ export function WelcomePage() {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
+  useEffect(() => {
+    const fetchLatestUploads = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/resources/latest/uploads`, {
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setLatestUploads(data.uploads || []);
+        }
+      } catch (err) {
+        console.error("Latest uploads fetch failed");
+      }
+    };
+
+    fetchLatestUploads();
+  }, []);
+
   const stats = [
     { label: "Active Courses", value: 4, icon: "fas fa-book-open" },
     {
@@ -121,6 +143,45 @@ export function WelcomePage() {
             </div>
           ))}
         </div>
+
+        <section className="latest-section">
+          <div className="latest-header">
+            <div>
+              <h2>Latest Uploads</h2>
+              <p>Newest PDFs and videos shared by lecturers.</p>
+            </div>
+          </div>
+
+          {latestUploads.length === 0 ? (
+            <div className="latest-empty">No uploads available yet.</div>
+          ) : (
+            <div className="latest-grid">
+              {latestUploads.map((item, index) => (
+                <article className="latest-card" key={`${item.type}-${index}`}>
+                  <span className={`latest-type latest-${item.type}`}>
+                    {item.type === "pdf" ? "PDF" : "VIDEO"}
+                  </span>
+                  <h3>{item.title}</h3>
+                  <p>{item.courseTitle}</p>
+                  <div className="latest-meta">
+                    <span>{item.unitCode}</span>
+                    <span>{item.uploadedBy}</span>
+                  </div>
+                  <button
+                    className="latest-action"
+                    onClick={() =>
+                      navigate(
+                        item.type === "pdf" ? "/simpleSearch" : "/videos",
+                      )
+                    }
+                  >
+                    {item.type === "pdf" ? "Open PDF Search" : "Open Videos"}
+                  </button>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
 
       {/* AI Floating Button */}
