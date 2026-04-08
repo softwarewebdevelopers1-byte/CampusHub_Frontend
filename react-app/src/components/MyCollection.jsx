@@ -21,7 +21,6 @@ function MyCollection() {
           },
         );
 
-        console.log(data);
         
 
         if (response.status === 200) {
