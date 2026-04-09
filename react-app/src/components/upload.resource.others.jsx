@@ -8,10 +8,10 @@ function UploadResourcesToThers() {
   const [PDFURL, resetURL] = useState("");
   const [loader, setLoader] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
 
-  // 1. State for Metadata
   const [metadata, setMetadata] = useState({
-    courseTitle: "", // This will now hold the dropdown selection
+    courseTitle: "",
     unitName: "",
     unitCode: "",
   });
@@ -21,10 +21,10 @@ function UploadResourcesToThers() {
   function clearError() {
     setTimeout(() => {
       setUploadStatus("");
+      setFeedbackMessage("");
     }, 5000);
   }
 
-  // Handle text and select input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setMetadata((prev) => ({ ...prev, [name]: value }));
@@ -33,7 +33,7 @@ function UploadResourcesToThers() {
   function setPDFUrl() {
     if (file) {
       if (PDFURL) URL.revokeObjectURL(PDFURL);
-      let url = URL.createObjectURL(file);
+      const url = URL.createObjectURL(file);
       resetURL(url);
     }
   }
@@ -41,27 +41,32 @@ function UploadResourcesToThers() {
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
+
       if (selectedFile.type !== "application/pdf") {
         setUploadStatus("invalid-file");
+        setFeedbackMessage("");
         setFile(null);
         clearError();
         return;
       }
+
       if (selectedFile.size > 5 * 1024 * 1024) {
         setUploadStatus("file-too-large");
+        setFeedbackMessage("");
         setFile(null);
         clearError();
         return;
       }
+
       setFile(selectedFile);
       setUploadStatus("");
+      setFeedbackMessage("");
     }
   };
 
   const handleBoxClick = () => fileInputRef.current?.click();
 
   const handleUpload = async () => {
-    // 2. Strict Validation: Check file AND all metadata
     if (
       !file ||
       !metadata.courseTitle ||
@@ -69,11 +74,14 @@ function UploadResourcesToThers() {
       !metadata.unitCode
     ) {
       setUploadStatus("missing-info");
+      setFeedbackMessage("");
       clearError();
       return;
     }
 
     setLoader(true);
+    setFeedbackMessage("");
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("courseTitle", metadata.courseTitle);
@@ -89,21 +97,28 @@ function UploadResourcesToThers() {
           credentials: "include",
         },
       );
-      console.log(await res.json());
+
+      const result = await res.json();
 
       if (res.ok) {
         setUploadStatus("success");
+        setFeedbackMessage(
+          result?.verification?.feedback || "AI verified the document successfully.",
+        );
         setFile(null);
         setMetadata({ courseTitle: "", unitName: "", unitCode: "" });
         resetURL("");
         clearError();
       } else {
-        setUploadStatus("error");
-
+        setUploadStatus(result?.verificationFailed ? "verification-failed" : "error");
+        setFeedbackMessage(
+          result?.feedback || result?.error || "Upload failed. Try again.",
+        );
         clearError();
       }
     } catch (err) {
       setUploadStatus("error");
+      setFeedbackMessage("Upload failed. Try again.");
       console.log(err);
     } finally {
       setLoader(false);
@@ -129,7 +144,7 @@ function UploadResourcesToThers() {
             onChange={handleFileChange}
             className={styles.uploadInput}
           />
-          <div className={styles.uploadIcon}>{file ? "✅" : "📄"}</div>
+          <div className={styles.uploadIcon}>{file ? "PDF" : "DOC"}</div>
           <div className={styles.uploadText}>
             {file ? file.name : "Click to select a PDF file"}
           </div>
@@ -138,11 +153,8 @@ function UploadResourcesToThers() {
 
         {file && (
           <div className={styles.metadataSection}>
-            <p className={styles.infoPrompt}>
-              Please provide resource details:
-            </p>
+            <p className={styles.infoPrompt}>Please provide resource details:</p>
 
-            {/* Updated Course Title Selection */}
             <select
               name="courseTitle"
               value={metadata.courseTitle}
@@ -191,6 +203,7 @@ function UploadResourcesToThers() {
                   setFile(null);
                   setMetadata({ courseTitle: "", unitName: "", unitCode: "" });
                   resetURL("");
+                  setFeedbackMessage("");
                 }}
               >
                 Cancel
@@ -202,24 +215,25 @@ function UploadResourcesToThers() {
         <div className={styles.messageArea}>
           {uploadStatus === "success" && (
             <p className={styles.successMessage}>
-              ✓ File uploaded successfully
+              File uploaded successfully. {feedbackMessage}
             </p>
           )}
           {uploadStatus === "missing-info" && (
             <p className={styles.errorMessage}>
-              ✗ Please fill in all fields before uploading
+              Please fill in all fields before uploading
             </p>
           )}
           {uploadStatus === "error" && (
-            <p className={styles.errorMessage}>✗ Upload failed. Try again.</p>
+            <p className={styles.errorMessage}>{feedbackMessage}</p>
+          )}
+          {uploadStatus === "verification-failed" && (
+            <p className={styles.errorMessage}>{feedbackMessage}</p>
           )}
           {uploadStatus === "invalid-file" && (
-            <p className={styles.errorMessage}>
-              ✗ Invalid file type. PDF only.
-            </p>
+            <p className={styles.errorMessage}>Invalid file type. PDF only.</p>
           )}
           {uploadStatus === "file-too-large" && (
-            <p className={styles.errorMessage}>✗ File exceeds 5MB limit.</p>
+            <p className={styles.errorMessage}>File exceeds 5MB limit.</p>
           )}
         </div>
       </div>
