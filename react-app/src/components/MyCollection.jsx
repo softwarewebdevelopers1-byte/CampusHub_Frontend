@@ -8,6 +8,9 @@ function MyCollection() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("date"); // 'date', 'name', 'code'
   const [filteredPdfs, setFilteredPdfs] = useState([]);
+  const [deletingId, setDeletingId] = useState(null);
+  const [actionMessage, setActionMessage] = useState("");
+  const [actionError, setActionError] = useState("");
 
   useEffect(() => {
     const fetchMyPdfs = async () => {
@@ -84,6 +87,50 @@ function MyCollection() {
     document.body.style.overflow = "unset";
   };
 
+  const handleDelete = async (pdf) => {
+    const shouldDelete = window.confirm(
+      `Delete "${pdf.unitName || "this document"}" from your collection?`,
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    try {
+      setDeletingId(pdf._id);
+      setActionMessage("");
+      setActionError("");
+
+      const response = await fetch(
+        `http://localhost:8000/api/users/get/own/pdfs/${pdf._id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.error || "Unable to delete document");
+      }
+
+      setMyPdfs((currentPdfs) =>
+        currentPdfs.filter((currentPdf) => currentPdf._id !== pdf._id),
+      );
+
+      if (selectedPdf === pdf.pdfUrl) {
+        handleClosePreview();
+      }
+
+      setActionMessage(result?.message || "Document deleted successfully.");
+    } catch (error) {
+      setActionError(error.message || "Unable to delete document.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const getFileSize = (url) => {
     // This is a placeholder - in real app, you'd get size from backend
     return "2.3 MB";
@@ -153,6 +200,9 @@ function MyCollection() {
         )}
       </div>
 
+      {actionMessage && <p className={styles.successBanner}>{actionMessage}</p>}
+      {actionError && <p className={styles.errorBanner}>{actionError}</p>}
+
       {/* Results Grid */}
       {!loading && filteredPdfs.length === 0 ? (
         <div className={styles.noResults}>
@@ -173,7 +223,7 @@ function MyCollection() {
       ) : (
         <div className={styles.resultsGrid}>
           {filteredPdfs.map((pdf, index) => (
-            <div key={index} className={styles.pdfCard}>
+            <div key={pdf._id || index} className={styles.pdfCard}>
               <div className={styles.pdfIcon}>
                 <i className="fas fa-file-pdf"></i>
               </div>
@@ -209,6 +259,16 @@ function MyCollection() {
                 >
                   <i className="fas fa-download"></i>
                 </a>
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => handleDelete(pdf)}
+                  title="Delete PDF"
+                  disabled={deletingId === pdf._id}
+                >
+                  <i
+                    className={`fas ${deletingId === pdf._id ? "fa-spinner fa-spin" : "fa-trash"}`}
+                  ></i>
+                </button>
               </div>
             </div>
           ))}
