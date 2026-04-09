@@ -10,6 +10,7 @@ import { DeepPDFSearch } from "./components/deep.search.jsx";
 import { UploadResources } from "./components/upload.AI.jsx";
 import { UploadResourcesToThers } from "./components/upload.resource.others.jsx";
 import { MyCollection } from "./components/MyCollection.jsx";
+import { MyNotes } from "./components/MyNotes.jsx";
 import NetworkError from "./components/network.error.jsx";
 import CampusHubVideo from "./components/videos.jsx";
 import Settings from "./components/settings.jsx";
@@ -27,6 +28,14 @@ function App() {
             element={
               <Dashboard>
                 <MyCollection />
+              </Dashboard>
+            }
+          />
+          <Route
+            path="/notes"
+            element={
+              <Dashboard>
+                <MyNotes />
               </Dashboard>
             }
           />

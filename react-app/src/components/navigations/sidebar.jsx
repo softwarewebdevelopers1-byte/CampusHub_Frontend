@@ -143,7 +143,13 @@ export function SideBar({ collapsed, setCollapsed }) {
             </Link>
           </li>
           <li>
-            <Link to="/notes">
+            <Link
+              to="/notes"
+              className={location.pathname === "/notes" ? styles.active : ""}
+              onClick={() => {
+                changeTitle("CampusHub | My Notes");
+              }}
+            >
               <i className="fas fa-sticky-note"></i>
               <span>My Notes</span>
             </Link>
