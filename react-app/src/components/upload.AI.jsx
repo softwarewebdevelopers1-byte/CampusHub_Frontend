@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../components.css.styles/upload.module.css";
 import { PreviewPDF } from "./pdf.preview.jsx";
@@ -7,61 +7,50 @@ import { SummaryView } from "./summary.view.jsx";
 
 function UploadResources() {
   let location = useNavigate();
-  // setting the file name
   const [file, setFile] = useState(null);
-  // setting the pdf url
   const [PDFURL, resetURL] = useState("");
-
-  //  setting the close button
   const [close, setClose] = useState(false);
-  // setting the loader
   const [loader, setLoader] = useState(false);
-  // setting the summary state for display
   const [summaryState, resetSummaryState] = useState(false);
-  // setting the Ai summary
   const [AISummary, resetAISummary] = useState("");
   const [rawSummary, setRawSummary] = useState("");
-  // setting the upload status
+  const [summaryHistory, setSummaryHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [uploadStatus, setUploadStatus] = useState("");
-  // getting the input element
   const fileInputRef = useRef(null);
-  // clipboard copy
 
   function setPDFUrl() {
     if (file) {
-      if (PDFURL) URL.revokeObjectURL(PDFURL); // revoke old URL string
+      if (PDFURL) URL.revokeObjectURL(PDFURL);
       const url = URL.createObjectURL(file);
       resetURL(url);
     }
   }
 
-  // error and success clearing
   function clearInfo() {
     setTimeout(() => setUploadStatus(""), 5000);
   }
+
   function clearFile() {
     setFile(null);
     resetURL("");
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // reset the input element
+      fileInputRef.current.value = "";
     }
   }
 
-  // Complete formatting function
   function formatAllElements(text) {
     if (!text) return "";
 
-    // 1. Normalize Whitespace & Line Endings
     let processed = text
       .replace(/\r\n/g, "\n")
       .replace(/[ \t]+/g, " ")
       .replace(/&nbsp;/gi, " ")
       .trim();
 
-    // 2. Protect Boolean/Math Expressions (Safe-storing)
     const mathStore = [];
     processed = processed.replace(
-      /(\(?[A-Z0-1][A-Z0-1·+⊕¬′() ]*[A-Z0-1′)]\)?|\d\s*\d\s*→\s*\d)/g,
+      /(\(?[A-Z0-1][A-Z0-1Â·+âŠ•Â¬â€²() ]*[A-Z0-1â€²)]\)?|\d\s*\d\s*â†’\s*\d)/g,
       (match) => {
         const id = mathStore.length;
         mathStore.push(match);
@@ -69,14 +58,12 @@ function UploadResources() {
       },
     );
 
-    // 3. Tables (Single Stroke | logic)
-    // This captures blocks of lines starting and ending with |
     processed = processed.replace(
       /((?:^\|.+\|\s*(?:\n|$))+)/gm,
       (tableBlock) => {
         const lines = tableBlock.trim().split("\n");
         const rows = lines
-          .filter((line) => !/^\s*\|(?:\s*-+\s*\|)+\s*$/.test(line)) // Filter out separator rows like |---|
+          .filter((line) => !/^\s*\|(?:\s*-+\s*\|)+\s*$/.test(line))
           .map((line, index) => {
             const cells = line
               .split("|")
@@ -101,7 +88,6 @@ function UploadResources() {
       },
     );
 
-    // 4. Headings & Separators
     processed = processed
       .replace(
         /^###\s*(.+)$/gm,
@@ -120,9 +106,8 @@ function UploadResources() {
         '<hr class="my-8 border-t border-gray-300">',
       );
 
-    // 5. Lists (Bullets & Numbers)
     processed = processed.replace(
-      /(?:^\s*(?:•|-|\*|\d+\.)\s+.+\n?)+/gm,
+      /(?:^\s*(?:â€¢|-|\*|\d+\.)\s+.+\n?)+/gm,
       (block) => {
         const isNumbered = /^\s*\d+\./.test(block.trim());
         const tag = isNumbered ? "ol" : "ul";
@@ -132,21 +117,18 @@ function UploadResources() {
         const items = block
           .trim()
           .split("\n")
-          .map((line) => line.replace(/^\s*(?:•|-|\*|\d+\.)\s+/, ""))
+          .map((line) => line.replace(/^\s*(?:â€¢|-|\*|\d+\.)\s+/, ""))
           .map((item) => `<li class="mb-1">${item}</li>`)
           .join("");
         return `<${tag} class="${listClass}">${items}</${tag}>`;
       },
     );
 
-    // 6. Inline Emphasis (Bold/Italic)
     processed = processed
       .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
       .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold">$1</strong>')
       .replace(/\*(?!\*)([^*]+)\*/g, '<em class="italic">$1</em>');
 
-    // 7. Paragraph Handling
-    // We only wrap segments that aren't already HTML blocks
     processed = processed
       .split(/\n{2,}/)
       .map((chunk) => {
@@ -157,7 +139,6 @@ function UploadResources() {
       })
       .join("\n");
 
-    // 8. Restore Math Expressions
     processed = processed.replace(
       /@@MATH(\d+)@@/g,
       (_, i) =>
@@ -167,11 +148,38 @@ function UploadResources() {
     return processed.trim();
   }
 
+  useEffect(() => {
+    const fetchSummaryHistory = async () => {
+      try {
+        setHistoryLoading(true);
+        const response = await fetch(
+          "http://localhost:8000/api/resource/pdf/history",
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result?.error || "Unable to load summary history");
+        }
+
+        setSummaryHistory(result.history || []);
+      } catch (error) {
+        setSummaryHistory([]);
+      } finally {
+        setHistoryLoading(false);
+      }
+    };
+
+    fetchSummaryHistory();
+  }, []);
+
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
 
-      // Validate file type
       if (selectedFile.type !== "application/pdf") {
         setUploadStatus("invalid-file");
         setFile(null);
@@ -179,7 +187,6 @@ function UploadResources() {
         return;
       }
 
-      // Validate file size (5MB limit)
       if (selectedFile.size > 5 * 1024 * 1024) {
         setUploadStatus("file-too-large");
         setFile(null);
@@ -194,6 +201,13 @@ function UploadResources() {
 
   const handleBoxClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const openSummaryFromHistory = (historyItem) => {
+    setRawSummary(historyItem.summaryText || "");
+    resetAISummary(formatAllElements(historyItem.summaryText || ""));
+    setClose(false);
+    resetSummaryState(true);
   };
 
   const handleUpload = async () => {
@@ -220,20 +234,12 @@ function UploadResources() {
       let response = await uploadRequest();
 
       if (response.status === 401) {
-        const refresh = await fetch(
-          "http://localhost:8000/auth/verify/refresh",
-          {
-            method: "POST",
-            credentials: "include",
-          },
-        );
+        await fetch("http://localhost:8000/auth/verify/refresh", {
+          method: "POST",
+          credentials: "include",
+        });
 
-        // if (!refresh.ok) {
-        //   location("/login");
-        //   return;
-        // }
-
-        response = await uploadRequest(); // retry once
+        response = await uploadRequest();
       }
 
       if (!response.ok) {
@@ -246,9 +252,19 @@ function UploadResources() {
       resetSummaryState(true);
       setClose(false);
       setRawSummary(res.data2 || "");
-
-      let AIWords = formatAllElements(res.data2);
-      resetAISummary(AIWords);
+      resetAISummary(formatAllElements(res.data2 || ""));
+      setSummaryHistory((currentHistory) => [
+        {
+          _id: res.summaryId || `${Date.now()}`,
+          fileName: res.fileName || file?.name || "Untitled PDF",
+          summaryText: res.data2 || "",
+          truncated: Boolean(res.truncated),
+          extractedCharacters: res.extractedCharacters || 0,
+          summarizedCharacters: res.summarizedCharacters || 0,
+          createdAt: new Date().toISOString(),
+        },
+        ...currentHistory,
+      ]);
 
       clearInfo();
     } catch (error) {
@@ -271,7 +287,6 @@ function UploadResources() {
       </div>
       {summaryState && !close && (
         <div className={styles.summarized}>
-          {" "}
           <SummaryView
             closeBtn={close}
             closeSet={setClose}
@@ -288,7 +303,6 @@ function UploadResources() {
       )}
       {!summaryState && (
         <div>
-          {" "}
           <div className={styles.uploadHeader}>Upload PDF Resource</div>
           <div className={styles.uploadSubtitle}>
             AI Summarization happens here
@@ -301,7 +315,7 @@ function UploadResources() {
               onChange={handleFileChange}
               className={styles.uploadInput}
             />
-            <div className={styles.uploadIcon}>📄</div>
+            <div className={styles.uploadIcon}>PDF</div>
             <div className={styles.uploadText}>
               {file ? file.name : "Click to select a PDF file"}
             </div>
@@ -313,7 +327,7 @@ function UploadResources() {
                 Generate summary
               </button>
               <button className={styles.uploadBtn} onClick={setPDFUrl}>
-                preview
+                Preview
               </button>
               <button className={styles.clearBtn} onClick={clearFile}>
                 Clear
@@ -322,24 +336,67 @@ function UploadResources() {
           )}
           {uploadStatus === "success" && (
             <div className={styles.successMessage}>
-              ✓ File uploaded successfully
+              Summary generated successfully
             </div>
           )}
           {uploadStatus === "error" && (
             <div className={styles.errorMessage}>
-              ✗ Upload failed or no file selected
+              Upload failed or no file selected
             </div>
           )}
           {uploadStatus === "invalid-file" && (
             <div className={styles.errorMessage}>
-              ✗ Invalid file type. Please upload only PDF files.
+              Invalid file type. Please upload only PDF files.
             </div>
           )}
           {uploadStatus === "file-too-large" && (
             <div className={styles.errorMessage}>
-              ✗ File is too large. Maximum file size is 5MB.
+              File is too large. Maximum file size is 5MB.
             </div>
           )}
+
+          <div className={styles.summaryHistorySection}>
+            <div className={styles.summaryHistoryHeader}>
+              <div>
+                <h3>Summary History</h3>
+                <p>Reopen summaries you generated earlier.</p>
+              </div>
+            </div>
+            {historyLoading ? (
+              <div className={styles.summaryHistoryEmpty}>
+                Loading your summary history...
+              </div>
+            ) : summaryHistory.length === 0 ? (
+              <div className={styles.summaryHistoryEmpty}>
+                No AI summaries yet. Generate one from a PDF to see it here.
+              </div>
+            ) : (
+              <div className={styles.summaryHistoryList}>
+                {summaryHistory.map((item) => (
+                  <article key={item._id} className={styles.summaryHistoryCard}>
+                    <div className={styles.summaryHistoryMeta}>
+                      <h4>{item.fileName || "Untitled PDF"}</h4>
+                      <span>
+                        {new Date(item.createdAt || Date.now()).toLocaleString()}
+                      </span>
+                    </div>
+                    <p>
+                      {(item.summaryText || "").slice(0, 180)}
+                      {(item.summaryText || "").length > 180 ? "..." : ""}
+                    </p>
+                    <div className={styles.summaryHistoryActions}>
+                      <button
+                        className={styles.uploadBtn}
+                        onClick={() => openSummaryFromHistory(item)}
+                      >
+                        Open Summary
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
