@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../components.css.styles/CampusHub_videos.module.css";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://campushub-backend-57dg.onrender.com";
 
 const CampusHubVideo = () => {
   const [searchQuery, setSearchQuery] = useState("");

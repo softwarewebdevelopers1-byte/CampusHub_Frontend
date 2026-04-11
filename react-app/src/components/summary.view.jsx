@@ -32,7 +32,7 @@ export function SummaryView({
 
     try {
       const response = await fetch(
-        "http://localhost:8000/api/resource/pdf/ask-summary",
+        "https://campushub-backend-57dg.onrender.com/api/resource/pdf/ask-summary",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

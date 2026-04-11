@@ -102,7 +102,7 @@ function MyCollection() {
       setActionError("");
 
       const response = await fetch(
-        `http://localhost:8000/api/users/get/own/pdfs/${pdf._id}`,
+        `https://campushub-backend-57dg.onrender.com/api/users/get/own/pdfs/${pdf._id}`,
         {
           method: "DELETE",
           credentials: "include",

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import styles from "../components.css.styles/simpleSearch.module.css";
 
 function PDFLibrary() {
@@ -6,34 +6,55 @@ function PDFLibrary() {
   const [results, setResults] = useState([]);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [searchMessage, setSearchMessage] = useState(
+    "Search by unit name, unit code, course title, or uploader.",
+  );
 
   const handleSearch = async () => {
-    if (!searchTerm) return;
+    const trimmedSearch = searchTerm.trim();
+    if (!trimmedSearch) {
+      setResults([]);
+      setSearchMessage("Enter a unit name, code, course title, or uploader.");
+      return;
+    }
+
     setResults([]);
 
     try {
       setLoading(true);
+      setSearchMessage("Searching for the best matches...");
 
-      let response = await fetch(
+      const response = await fetch(
         "https://campushub-backend-57dg.onrender.com/api/resources/pdf/users/simple/search",
         {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ unitName: searchTerm }),
+          body: JSON.stringify({ unitName: trimmedSearch }),
         },
       );
 
-      let data = await response.json();
+      const data = await response.json();
 
       if (data.success) {
-        setResults(data.data);
+        const nextResults = Array.isArray(data.data) ? data.data : [];
+        const totalResults =
+          typeof data.total === "number" ? data.total : nextResults.length;
+
+        setResults(nextResults);
+        setSearchMessage(
+          totalResults > 0
+            ? `Found ${totalResults} result${totalResults === 1 ? "" : "s"} for "${trimmedSearch}".`
+            : `No strong matches found for "${trimmedSearch}". Try unit name, code, or course title keywords.`,
+        );
       } else {
         setResults([]);
+        setSearchMessage(data.message || "Search failed. Try again.");
       }
     } catch (error) {
       console.error("Search failed:", error);
       setResults([]);
+      setSearchMessage("Search failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -44,23 +65,22 @@ function PDFLibrary() {
       <div className={styles.headers}>PDF Library</div>
 
       <div style={{ fontWeight: "bold", color: "#fff" }}>
-        Here you can access and manage your PDF resources.
+        Find the closest PDF matches across unit names, unit codes, course titles,
+        and uploader details.
       </div>
 
-      {/* Categories */}
       <div className={styles.AllCategory}>
-        <div className={styles.category}>New</div>
-        <div className={styles.category}>Informatics</div>
-        <div className={styles.category}>Information Science</div>
-        <div className={styles.category}>Computer Science</div>
-        <div className={styles.category}>Computer Graphics</div>
+        <div className={styles.category}>Best Matches</div>
+        <div className={styles.category}>Unit Name</div>
+        <div className={styles.category}>Unit Code</div>
+        <div className={styles.category}>Course Title</div>
+        <div className={styles.category}>Uploader</div>
       </div>
 
-      {/* Search */}
       <div className={styles.search}>
         <input
           type="text"
-          placeholder="Search PDFs..."
+          placeholder="Search by unit name, code, course title, or uploader..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -68,23 +88,24 @@ function PDFLibrary() {
         <button onClick={handleSearch}>Search</button>
       </div>
 
-      {/* Loading */}
-      {loading && <div className={styles.noResults}>Searching...</div>}
+      <div className={styles.noResults}>{loading ? "Searching..." : searchMessage}</div>
 
-      {/* Results */}
       <div className={styles.results}>
         {!loading && results.length === 0 && (
           <div className={styles.noResults}>No PDFs found</div>
         )}
 
         {results.map((pdf, index) => (
-          <div key={index} className={styles.pdfBox}>
-            <h3>{pdf.unitName.toUpperCase()}</h3>
+          <div key={pdf._id || index} className={styles.pdfBox}>
+            <h3>{pdf.unitName?.toUpperCase() || "UNTITLED UNIT"}</h3>
             <p>
-              <strong>Code:</strong> {pdf.unitCode}
+              <strong>Code:</strong> {pdf.unitCode || "N/A"}
             </p>
             <p>
-              <strong>Uploaded By:</strong> {pdf.from}
+              <strong>Course:</strong> {pdf.courseTitle || "N/A"}
+            </p>
+            <p>
+              <strong>Uploaded By:</strong> {pdf.from || "Unknown"}
             </p>
 
             <button
@@ -97,7 +118,6 @@ function PDFLibrary() {
         ))}
       </div>
 
-      {/* Iframe Preview */}
       {selectedPdf && (
         <div className={styles.previewOverlay}>
           <div className={styles.previewContainer}>
@@ -105,7 +125,7 @@ function PDFLibrary() {
               className={styles.closeBtn}
               onClick={() => setSelectedPdf(null)}
             >
-              ✕ Close
+              Close
             </button>
 
             <iframe

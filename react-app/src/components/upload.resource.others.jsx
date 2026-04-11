@@ -90,7 +90,7 @@ function UploadResourcesToThers() {
 
     try {
       const res = await fetch(
-        "http://localhost:8000/api/resources/upload/users/data/pdf",
+        "https://campushub-backend-57dg.onrender.com/api/resources/upload/users/data/pdf",
         {
           method: "POST",
           body: formData,

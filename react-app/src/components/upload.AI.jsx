@@ -153,7 +153,7 @@ function UploadResources() {
       try {
         setHistoryLoading(true);
         const response = await fetch(
-          "http://localhost:8000/api/resource/pdf/history",
+          "https://campushub-backend-57dg.onrender.com/api/resource/pdf/history",
           {
             method: "GET",
             credentials: "include",
@@ -223,7 +223,7 @@ function UploadResources() {
     formData.append("file", file);
 
     async function uploadRequest() {
-      return fetch("http://localhost:8000/api/resource/pdf", {
+      return fetch("https://campushub-backend-57dg.onrender.com/api/resource/pdf", {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -234,7 +234,7 @@ function UploadResources() {
       let response = await uploadRequest();
 
       if (response.status === 401) {
-        await fetch("http://localhost:8000/auth/verify/refresh", {
+        await fetch("https://campushub-backend-57dg.onrender.com/auth/verify/refresh", {
           method: "POST",
           credentials: "include",
         });
