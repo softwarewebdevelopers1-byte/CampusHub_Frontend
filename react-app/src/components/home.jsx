@@ -126,9 +126,17 @@ export function WelcomePage() {
             <p>Stay focused. Let’s make today productive.</p>
           </div>
 
-          <button className="upload-btn" onClick={() => navigate("/sharePDF")}>
-            Upload Resource
-          </button>
+          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+            <button className="upload-btn" onClick={() => navigate("/sharePDF")}>
+              Upload PDF
+            </button>
+            <button
+              className="upload-btn"
+              onClick={() => navigate("/shareVideo")}
+            >
+              Upload Video
+            </button>
+          </div>
         </div>
 
         {/* Stats */}

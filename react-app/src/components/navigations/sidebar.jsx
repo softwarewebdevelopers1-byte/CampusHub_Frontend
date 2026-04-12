@@ -59,7 +59,8 @@ export function SideBar({ collapsed, setCollapsed }) {
                 location.pathname === "/simpleSearch" ||
                 location.pathname === "/deepsearch" ||
                 location.pathname === "/AISummary" ||
-                location.pathname === "/sharePDF"
+                location.pathname === "/sharePDF" ||
+                location.pathname === "/shareVideo"
                   ? styles.active
                   : ""
               }
@@ -125,6 +126,17 @@ export function SideBar({ collapsed, setCollapsed }) {
                     }}
                   >
                     Share PDF
+                  </Link>
+                  <Link
+                    to="/shareVideo"
+                    className={
+                      location.pathname === "/shareVideo" ? styles.active : ""
+                    }
+                    onClick={() => {
+                      changeTitle("CampusHub | Share Video");
+                    }}
+                  >
+                    Share Video
                   </Link>
                 </li>
               </ul>

@@ -16,6 +16,7 @@ import CampusHubVideo from "./components/videos.jsx";
 import Settings from "./components/settings.jsx";
 import AdminPanel from "./components/admin.panel.jsx";
 import LecturerPanel from "./components/lecturer.panel.jsx";
+import { StudentVideoUpload } from "./components/upload.video.student.jsx";
 
 function App() {
   return (
@@ -70,6 +71,14 @@ function App() {
             element={
               <Dashboard>
                 <UploadResourcesToThers />
+              </Dashboard>
+            }
+          />
+          <Route
+            path="/shareVideo"
+            element={
+              <Dashboard>
+                <StudentVideoUpload />
               </Dashboard>
             }
           />
